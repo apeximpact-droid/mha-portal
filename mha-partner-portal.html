@@ -1,0 +1,1210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>MyHealthAngel — Partner Compliance Portal</title>
+<style>
+  :root{
+    /* MHA palette — gold from the wings, charcoal chrome, soft grey text */
+    --navy:#2b2b31;--navy-2:#3a3a42;--navy-3:#1f1f24;   /* charcoal chrome */
+    --cyan:#e9c463;--cyan-2:#c99a2e;                     /* MHA gold accents */
+    --ink:#2a2a31;--muted:#7c7c86;--muted-2:#a6a6ae;
+    --line:#e7e7ec;--bg-a:#f5f5f8;--bg-b:#ffffff;--card:#ffffff;
+    --green:#12a45a;--green-bg:#e2f6ec;--amber:#d1820a;--amber-bg:#fbf0d9;
+    --red:#e0455a;--red-bg:#fbe5e9;--slate:#7c7c86;--slate-bg:#eeeef2;
+    --radius:14px;
+    --shadow:0 1px 2px rgba(40,40,50,.06),0 10px 30px rgba(40,40,50,.07);
+    --shadow-lg:0 30px 80px rgba(20,20,26,.45);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:linear-gradient(165deg,var(--bg-a),var(--bg-b));font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+  button{font-family:inherit;cursor:pointer;border:none;background:none}
+  a{color:var(--cyan-2)}a:hover{text-decoration:underline}
+  .hidden{display:none !important}
+  .brandwrap{display:inline-flex;align-items:center;line-height:0}
+  .brand-fallback{display:none;align-items:center}
+  .login-logo,.side-logo{display:block;height:auto}
+
+
+  /* Login */
+  #login{position:fixed;inset:0;padding:24px;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;
+    background:radial-gradient(900px 500px at 82% 18%,rgba(47,211,255,.16),rgba(47,211,255,0) 60%),radial-gradient(700px 500px at 12% 90%,rgba(0,174,239,.14),rgba(0,174,239,0) 60%),linear-gradient(135deg,var(--navy),var(--navy-3) 55%,var(--navy))}
+  #login .bg-peak{position:absolute;right:-4vw;bottom:-8vh;width:52vw;max-width:720px;opacity:.06;pointer-events:none}
+  #login .bg-peak{width:46vw;max-width:620px}
+  #login .login-logo{width:300px;filter:drop-shadow(0 8px 24px rgba(0,0,0,.45)) brightness(1.45);z-index:2}
+  .login-card{position:relative;z-index:2;background:var(--card);width:100%;max-width:410px;border-radius:18px;padding:30px 30px 24px;box-shadow:var(--shadow-lg)}
+  .login-card h1{font-size:19px;font-weight:800;text-align:center;margin-bottom:4px}
+  .login-card .tag{text-align:center;color:var(--muted);font-size:12.5px;margin-bottom:18px}
+  .login-blurb{background:linear-gradient(165deg,#f2f6fb,#fff);border:1px solid var(--line);border-radius:11px;padding:13px 15px;color:var(--slate);font-size:12.5px;margin-bottom:16px}
+  .field{margin-bottom:13px}
+  .field label{display:block;font-size:12px;font-weight:700;color:var(--navy);margin-bottom:5px}
+  .field input,.inp{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:10px;font-size:14px;background:#fbfcfe;transition:.15s;color:var(--ink);font-family:inherit}
+  .field input:focus,.inp:focus{outline:none;border-color:var(--cyan-2);box-shadow:0 0 0 3px rgba(0,174,239,.16);background:#fff}
+  select.inp{cursor:pointer}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:11px 16px;border-radius:10px;font-weight:700;font-size:14px;transition:.15s;white-space:nowrap}
+  .btn-primary{background:linear-gradient(135deg,var(--navy),var(--navy-2));color:#fff;box-shadow:0 6px 16px rgba(12,45,72,.25)}
+  .btn-primary:hover{filter:brightness(1.12)}
+  .btn-cyan{background:linear-gradient(135deg,var(--cyan-2),var(--cyan));color:#2a2214}
+  .btn-cyan:hover{filter:brightness(1.05)}
+  .btn-ghost{background:#eef2f7;color:var(--ink)}.btn-ghost:hover{background:#e3e9f1}
+  .btn-danger{background:var(--red-bg);color:var(--red)}.btn-danger:hover{background:#f8d3da}
+  .btn-block{width:100%}
+  .btn-sm{padding:8px 12px;font-size:13px;border-radius:9px}
+  .login-foot{display:flex;justify-content:space-between;align-items:center;margin-top:14px;font-size:11.5px;color:var(--muted-2)}
+  .hint{margin-top:12px;font-size:11.5px;color:var(--muted);background:#f4f7fb;border:1px dashed var(--line);border-radius:9px;padding:9px 11px}
+  .hint b{color:var(--navy)}
+
+  /* Shell */
+  #app{display:none;min-height:100vh;grid-template-columns:244px 1fr;grid-template-rows:58px 1fr;grid-template-areas:"sidebar topbar" "sidebar main"}
+  #app.show{display:grid}
+  .sidebar{grid-area:sidebar;position:sticky;top:0;height:100vh;display:flex;flex-direction:column;padding:18px 12px;background:linear-gradient(180deg,var(--navy),var(--navy-3));border-right:1px solid rgba(255,255,255,.06)}
+  .sidebar .brandwrap{padding:8px 10px 18px;width:100%;justify-content:center}
+  .sidebar .side-logo{width:186px;max-width:100%;height:auto;display:block;filter:brightness(1.45)}
+  .role-chip{margin:0 10px 14px;font-size:10.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#2a2214;background:linear-gradient(135deg,var(--cyan-2),var(--cyan));padding:4px 9px;border-radius:6px;display:inline-block;align-self:flex-start}
+  .role-chip.client{background:rgba(255,255,255,.14);color:#cfe6f3}
+  .nav-item{display:flex;align-items:center;gap:11px;width:100%;text-align:left;position:relative;padding:11px 13px;border-radius:10px;color:#b8c6d6;font-weight:600;font-size:13.5px;transition:.12s}
+  .nav-item:hover{background:rgba(255,255,255,.06);color:#fff}
+  .nav-item.active{background:rgba(47,211,255,.14);color:#fff}
+  .nav-item.active::before{content:"";position:absolute;left:-12px;top:9px;bottom:9px;width:3px;border-radius:3px;background:var(--cyan)}
+  .nav-item .ic{width:17px;height:17px;flex:none;opacity:.85}
+  .nav-sub{margin:2px 0 6px 16px;padding-left:12px;border-left:1px solid rgba(255,255,255,.1);display:flex;flex-direction:column;gap:1px}
+  .nav-sub button{text-align:left;padding:7px 12px;border-radius:8px;color:#8fa3b6;font-size:13px;font-weight:500}
+  .nav-sub button:hover{background:rgba(255,255,255,.06);color:#fff}
+  .nav-sub button.active{color:#fff;background:rgba(255,255,255,.08);font-weight:600}
+  .side-foot{margin-top:auto;padding:14px 10px 2px;border-top:1px solid rgba(255,255,255,.08);color:#6f8397;font-size:11px}
+  .topbar{grid-area:topbar;background:var(--card);border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 24px;position:sticky;top:0;z-index:20}
+  .crumbs{font-size:13px;color:var(--muted);font-weight:500}.crumbs b{color:var(--ink)}
+  .topbar .who{display:flex;align-items:center;gap:12px}
+  .avatar{width:31px;height:31px;border-radius:9px;background:linear-gradient(135deg,var(--cyan-2),var(--cyan));color:#2a2214;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px}
+  .org-name{font-size:13px;font-weight:700;text-align:right}.org-name span{display:block;font-size:11px;color:var(--muted);font-weight:500}
+  .link-btn{color:var(--muted);font-size:13px;font-weight:600}.link-btn:hover{color:var(--red)}
+  main{grid-area:main;padding:24px 30px 64px;overflow-y:auto}
+  .page-title{font-size:23px;font-weight:800;letter-spacing:-.02em;margin-bottom:3px}
+  .page-sub{color:var(--muted);margin-bottom:22px;font-size:13.5px}
+  .page-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
+
+  .banner{background:linear-gradient(120deg,#0c2d48,#133a5c);color:#eaf4fb;border-radius:var(--radius);padding:16px 20px;margin-bottom:24px;display:flex;gap:13px;align-items:flex-start;position:relative;overflow:hidden;box-shadow:var(--shadow)}
+  .banner::after{content:"";position:absolute;right:-40px;top:-60px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(47,211,255,.28),rgba(47,211,255,0) 70%)}
+  .banner .dot{width:9px;height:9px;border-radius:50%;background:var(--cyan);margin-top:5px;flex:none;box-shadow:0 0 0 4px rgba(47,211,255,.2)}
+  .banner h4{font-size:14px;margin-bottom:3px;color:#fff}
+  .banner p{font-size:12.5px;color:#c3d6e6}.banner a{color:var(--cyan)}
+  .warn{background:#fff7e8;border:1px solid #f2d99a;color:#8a5a00;border-radius:11px;padding:11px 14px;font-size:12.5px;margin-bottom:20px;display:flex;gap:10px;align-items:flex-start}
+  .warn b{color:#7a4f00}
+
+  .cards{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px}
+  .stat{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+  .stat::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--cyan)}
+  .stat.new::before{background:var(--green)}.stat.day::before{background:var(--amber)}.stat.week::before{background:var(--red)}
+  .stat .lbl{font-size:11.5px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.04em}
+  .stat .num{font-size:30px;font-weight:800;letter-spacing:-.03em;margin-top:6px;color:var(--navy)}
+  .stat.new .num{color:var(--green)}.stat.day .num{color:var(--amber)}.stat.week .num{color:var(--red)}
+  .stat .num.click{cursor:pointer}.stat .num.click:hover{opacity:.72}
+  .section-h{display:flex;align-items:center;justify-content:space-between;margin:8px 0 13px}
+  .section-h h3{font-size:15px;font-weight:800;color:var(--navy)}
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+  .panel-h{padding:14px 16px;border-bottom:1px solid var(--line);font-weight:800;font-size:13.5px;display:flex;align-items:center;justify-content:space-between;color:var(--navy)}
+  .panel-b{padding:6px 6px}
+  .thread{display:block;width:100%;text-align:left;padding:11px 12px;border-radius:10px}
+  .thread:hover{background:#f3f7fb}.thread .t{font-weight:600;font-size:13.5px}.thread .m{font-size:12px;color:var(--muted);margin-top:2px}.thread .m b{color:var(--slate)}
+  .empty{padding:26px 16px;text-align:center;color:var(--muted-2);font-size:13px}
+
+  .toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:14px}
+  .toolbar input,.toolbar select{padding:9px 11px;border:1px solid var(--line);border-radius:9px;font-size:13px;background:#fff;color:var(--ink)}
+  .toolbar input:focus,.toolbar select:focus{outline:none;border-color:var(--cyan-2)}
+  .search{position:relative;min-width:230px;flex:1}.search input{width:100%;padding-left:33px}
+  .search svg{position:absolute;left:10px;top:50%;transform:translateY(-50%);opacity:.45}
+  .updated{font-size:12px;color:var(--muted);margin-left:auto;display:flex;align-items:center;gap:8px}
+
+  .table-wrap{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow)}
+  table{width:100%;border-collapse:collapse}
+  thead th{text-align:left;font-size:11.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);padding:12px 14px;background:#f5f8fb;border-bottom:1px solid var(--line);font-weight:800;white-space:nowrap;user-select:none}
+  thead th.sortable{cursor:pointer}
+  thead th .arrow{opacity:.4;font-size:10px}
+  thead th.sorted{color:var(--navy)}thead th.sorted .arrow{opacity:1;color:var(--cyan-2)}
+  tbody td{padding:12px 14px;border-bottom:1px solid var(--line);font-size:13px;white-space:nowrap}
+  tbody tr:last-child td{border-bottom:none}
+  tr.clickable{cursor:pointer;transition:background .1s}tr.clickable:hover{background:#f2f8fd}
+  .smid{font-weight:700;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12.5px;color:var(--navy)}
+  .badge{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:999px;font-size:11.5px;font-weight:700}
+  .badge::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+  .b-approved{color:var(--green);background:var(--green-bg)}.b-review{color:var(--amber);background:var(--amber-bg)}
+  .b-submitted{color:var(--cyan-2);background:#e0f4fd}.b-nouse{color:var(--slate);background:var(--slate-bg)}
+  .b-active{color:var(--green);background:var(--green-bg)}.b-inactive{color:var(--slate);background:var(--slate-bg)}
+  .pill{display:inline-flex;align-items:center;gap:5px;padding:2px 9px;border-radius:999px;font-size:11.5px;font-weight:700;background:#e6eef6;color:var(--navy);margin:1px 0}
+  .pill.pend{background:var(--slate-bg);color:var(--muted);font-weight:600}
+  td.wrapcell{white-space:normal;line-height:1.9;max-width:260px}
+  td.chkcell,th.chkcell{width:40px;text-align:center;padding-left:14px;padding-right:0}
+  .chkcell input{width:16px;height:16px;accent-color:var(--cyan-2);cursor:pointer;vertical-align:middle}
+  .selbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:#eaf7ff;border:1px solid #cfeafb;border-radius:11px;padding:10px 14px;margin-bottom:12px;font-size:13px;font-weight:800;color:var(--navy)}
+  .selbar.none{background:#f5f8fb;border-color:var(--line);color:var(--muted);font-weight:600}
+  .selbar .sp{margin-left:auto;font-size:11.5px;font-weight:500;color:var(--muted)}
+  .tablefoot{padding:11px 14px;color:var(--muted);font-size:12px;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}
+  .row-actions{display:flex;gap:6px;justify-content:flex-end}
+
+  /* Detail */
+  .back{display:inline-flex;align-items:center;gap:6px;color:var(--muted);font-weight:600;font-size:13px;margin-bottom:14px}
+  .back:hover{color:var(--navy)}
+  .detail-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:18px;flex-wrap:wrap}
+  .detail-head h2{font-size:20px;font-weight:800;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--navy)}
+  .detail-head .sub{color:var(--muted);font-size:13px;margin-top:3px}
+  .detail-actions{display:flex;gap:9px;align-items:center;flex-wrap:wrap}
+  .detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:18px}
+  .card-h{display:flex;align-items:center;gap:8px;padding:13px 16px;border-bottom:1px solid var(--line);font-weight:800;font-size:13.5px;color:var(--navy)}
+  .card-h .ic{width:16px;height:16px;color:var(--cyan-2)}
+  .kv{padding:6px 16px 14px}
+  .kv .row{display:grid;grid-template-columns:150px 1fr;gap:10px;padding:8px 0;border-bottom:1px dashed #eef2f6;font-size:13px}
+  .kv .row:last-child{border-bottom:none}.kv .k{color:var(--muted);font-weight:600}.kv .v{font-weight:700;color:var(--ink)}
+  .optin{display:flex;align-items:center;gap:8px;padding:5px 0;font-size:13px}
+  .optin .chk{width:16px;height:16px;border-radius:5px;background:var(--green);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:11px;flex:none}
+  .optin .chk.no{background:#cbd3dd}
+  .file-row{display:flex;align-items:center;justify-content:space-between;padding:11px 16px;border-bottom:1px solid var(--line)}
+  .file-row:last-child{border-bottom:none}
+  .file-row .fn{display:flex;align-items:center;gap:9px;font-weight:600;font-size:13px;min-width:0}
+  .file-row .fn .ic{width:15px;height:15px;color:var(--cyan-2);flex:none}
+  .file-row .fn a{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .file-row .meta{font-size:12px;color:var(--muted);white-space:nowrap;margin-left:10px}
+  .disc{padding:8px 16px 16px}
+  .disc-msg{display:flex;gap:10px;padding:11px 0;border-bottom:1px dashed #eef2f6}.disc-msg:last-child{border-bottom:none}
+  .disc-msg .av{width:29px;height:29px;border-radius:9px;flex:none;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:11px;color:#fff}
+  .av.qv{background:linear-gradient(135deg,var(--navy),var(--navy-2))}.av.me{background:linear-gradient(135deg,var(--cyan-2),var(--cyan));color:#2a2214}
+  .disc-msg .body .who{font-weight:700;font-size:12.5px}.disc-msg .body .who span{color:var(--muted);font-weight:500;margin-left:7px;font-size:11px}
+  .disc-msg .body .txt{font-size:13px;margin-top:2px;color:var(--slate)}
+  .status-menu{position:relative}
+  .status-list{position:absolute;right:0;top:calc(100% + 6px);background:#fff;border:1px solid var(--line);border-radius:11px;box-shadow:var(--shadow);width:196px;overflow:hidden;z-index:30}
+  .status-list button{display:flex;align-items:center;gap:8px;width:100%;text-align:left;padding:10px 13px;font-size:13px;font-weight:500}
+  .status-list button:hover{background:#f3f7fb}
+
+  /* Forms / editor */
+  .form-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:18px}
+  .form-card .fh{padding:14px 18px;border-bottom:1px solid var(--line);font-weight:800;color:var(--navy);font-size:14px}
+  .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px 18px;padding:18px}
+  .form-grid.one{grid-template-columns:1fr}
+  .ff{display:flex;flex-direction:column;gap:5px}
+  .ff.full{grid-column:1/-1}
+  .ff label{font-size:12px;font-weight:700;color:var(--navy)}
+  .ff .help{font-size:11px;color:var(--muted);font-weight:500}
+  .optin-editor .oe-card{border:1px solid var(--line);border-radius:11px;padding:10px 12px;margin-bottom:10px;background:#fbfcfe}
+  .optin-editor .oe-row{display:grid;grid-template-columns:1fr 150px 90px 34px;gap:8px;align-items:center}
+  .oe-attach{display:flex;align-items:center;gap:8px;margin-top:9px;padding-top:9px;border-top:1px dashed var(--line);flex-wrap:wrap}
+  .oe-attach .lab{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}
+  .oe-attach .have{display:inline-flex;align-items:center;gap:7px;background:#eaf7ff;border:1px solid #cfeafb;color:var(--navy);border-radius:8px;padding:5px 10px;font-size:12.5px;font-weight:700;max-width:100%}
+  .oe-attach .have b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:220px}
+  .oe-attach .pick{display:inline-flex;align-items:center;gap:6px;background:#eef2f7;color:var(--ink);border-radius:8px;padding:6px 11px;font-size:12.5px;font-weight:700;cursor:pointer}
+  .oe-attach .pick:hover{background:#e3e9f1}
+  /* detail view: opt-in + its confirmation */
+  .optin-row{padding:7px 0;border-bottom:1px dashed #eef2f6}
+  .optin-row:last-child{border-bottom:none}
+  .optin-file{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;margin-top:3px;margin-left:24px}
+  .optin-file.none{color:var(--muted-2);font-weight:500;font-style:italic}
+  .chkbox{display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:600;color:var(--ink);cursor:pointer}
+  .chkbox input{width:16px;height:16px;accent-color:var(--cyan-2)}
+  .file-drop{border:1.5px dashed #b9c6d4;border-radius:12px;padding:18px;text-align:center;color:var(--muted);font-size:13px;background:#f8fbfe}
+  .file-chip{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 12px;border:1px solid var(--line);border-radius:10px;margin-top:8px;font-size:13px;background:#fff}
+  .file-chip .l{display:flex;align-items:center;gap:8px;min-width:0}
+  .file-chip .l b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .file-chip .cat{font-size:11px;color:var(--muted)}
+  .vis-list{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:4px 18px 18px}
+  .vis-row{display:flex;align-items:center;justify-content:space-between;border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+  .vis-row .n{font-weight:700;font-size:13px}.vis-row .e{font-size:11.5px;color:var(--muted)}
+  /* toggle switch */
+  .switch{position:relative;display:inline-block;width:42px;height:24px;flex:none}
+  .switch input{display:none}
+  .switch .sl{position:absolute;inset:0;background:#cbd5e1;border-radius:999px;transition:.2s}
+  .switch .sl::before{content:"";position:absolute;width:18px;height:18px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+  .switch input:checked + .sl{background:linear-gradient(135deg,var(--cyan-2),var(--cyan))}
+  .switch input:checked + .sl::before{transform:translateX(18px)}
+  .form-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:6px}
+  .cred-box{background:#eefaf1;border:1px solid #b7e6c6;border-radius:10px;padding:12px 14px;font-size:13px;margin-top:6px}
+  .cred-box code{background:#fff;border:1px solid #cfe9d7;border-radius:6px;padding:2px 7px;font-weight:700;color:var(--navy)}
+
+  /* Modal */
+  .overlay{position:fixed;inset:0;background:rgba(6,20,36,.55);display:flex;align-items:center;justify-content:center;padding:22px;z-index:100;backdrop-filter:blur(2px)}
+  .modal{background:#fff;border-radius:16px;width:100%;max-width:520px;box-shadow:var(--shadow-lg);max-height:88vh;overflow:auto}
+  .modal-h{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--line)}
+  .modal-h h3{font-size:16px;font-weight:800;color:var(--navy)}
+  .modal-h .x{width:30px;height:30px;border-radius:9px;color:var(--muted);font-size:18px;display:flex;align-items:center;justify-content:center}.modal-h .x:hover{background:#f1f4f8;color:var(--ink)}
+  .modal-b{padding:18px 20px}
+  .modal-f{padding:14px 20px;border-top:1px solid var(--line);display:flex;justify-content:flex-end;gap:10px}
+  textarea.inp{resize:vertical;min-height:100px}
+  .hist-table{width:100%;border-collapse:collapse;font-size:13px}
+  .hist-table th{text-align:left;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.04em;padding:8px 10px;border-bottom:1px solid var(--line)}
+  .hist-table td{padding:9px 10px;border-bottom:1px solid #eef2f6}
+  .export-actions{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:22px}
+  .exp-card{flex:1;min-width:210px;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow)}
+  .exp-card .ei{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,var(--cyan-2),var(--cyan));display:flex;align-items:center;justify-content:center;color:#fff;margin-bottom:12px}
+  .exp-card h4{font-size:14px;margin-bottom:4px;color:var(--navy)}.exp-card p{font-size:12.5px;color:var(--muted);margin-bottom:14px}
+  .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--navy);color:#fff;padding:11px 18px;border-radius:11px;font-size:13px;font-weight:600;box-shadow:0 12px 30px rgba(0,0,0,.3);opacity:0;transition:.25s;z-index:200;pointer-events:none}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  .toast .d{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--cyan);margin-right:8px}
+  @media(max-width:900px){
+    #app{grid-template-columns:1fr;grid-template-areas:"topbar" "main"}.sidebar{display:none}
+    .cards{grid-template-columns:repeat(2,1fr)}.grid-2,.detail-grid,.form-grid,.vis-list{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ LOGIN ============ -->
+<div id="login">
+  <img class="bg-peak" src="https://myhealthangel.com/images/logo-black.png" alt="">
+  <span class="brandwrap"><img class="login-logo" src="https://myhealthangel.com/images/logo-black.png" alt="MyHealthAngel"></span>
+  <div class="login-card">
+    <h1>Partner Compliance Portal</h1>
+    <div class="tag">Medicare Marketing Materials · My Health Angel</div>
+    <div class="login-blurb">At My Health Angel, we prioritize efficient and effective compliance management. This portal streamlines compliance documentation and communication. Questions? <a href="mailto:compliance@myhealthangel.com">Let us know</a>.</div>
+    <form id="loginForm" autocomplete="off">
+      <div class="field"><label for="email">E-mail</label><input type="email" id="email" placeholder="login@email.com" /></div>
+      <div class="field"><label for="pw">Password</label><input type="password" id="pw" placeholder="••••••••••" /></div>
+      <label class="chkbox" style="margin:2px 0 14px"><input type="checkbox" id="remember"> <span>Remember me on this device</span></label>
+      <button class="btn btn-primary btn-block" type="submit">Login &nbsp;→</button>
+    </form>
+    <div class="hint" id="loginHint"></div>
+    <div class="login-foot"><span>© 2027 My Health Angel</span><a href="#" onclick="toast('Contact your admin to reset (demo)');return false;">Forgot password?</a></div>
+  </div>
+</div>
+
+<!-- ============ APP ============ -->
+<div id="app">
+  <aside class="sidebar" id="sidebar"></aside>
+  <header class="topbar">
+    <div class="crumbs" id="crumbs"></div>
+    <div class="who">
+      <div class="org-name" id="whoName"></div>
+      <div class="avatar" id="whoAv"></div>
+      <button class="link-btn" onclick="logout()">Sign out</button>
+    </div>
+  </header>
+  <main id="main"></main>
+</div>
+
+<div class="toast" id="toast"><span class="d"></span><span id="toastMsg"></span></div>
+
+<script>
+/* ================= Storage layer ================= */
+const DB={
+  pfx:'mha_',
+  load(k,def){try{const v=localStorage.getItem('mha_'+k);return v==null?def:JSON.parse(v);}catch(e){return def;}},
+  save(k,v){
+    try{localStorage.setItem('mha_'+k,JSON.stringify(v));return true;}
+    catch(e){
+      console.warn('MHA storage error',e);
+      if(typeof toast==='function')toast("Storage full — this browser holds only a few MB of uploads. Remove a file or use smaller images.");
+      return false;
+    }
+  }
+};
+const ADMIN={email:"amorman@myhealthangel.com",password:"demo1234",name:"MHA Compliance"};
+
+/* ================= Seed data (first run) ================= */
+const STATUSES=["Approved","In Review","Submitted","Will Not Use"];
+const CARRIERS=["UnitedHealthcare","Humana","Aetna","Cigna","Wellcare"];
+const badgeClass={"Approved":"b-approved","In Review":"b-review","Submitted":"b-submitted","Will Not Use":"b-nouse"};
+function today(){return new Date().toISOString().slice(0,10);}
+function daysAgo(n){const d=new Date();d.setDate(d.getDate()-n);return d.toISOString().slice(0,10);}
+function uid(p){return p+Math.random().toString(36).slice(2,9);}
+
+function seed(){
+  if(localStorage.getItem('mha_seeded')) return;
+  const c1='c_bright', c2='c_summit';
+  const clients=[
+    {id:c1,org:"Bright Path Marketing",email:"partner@demo.com",password:"demo1234",active:true,created:"2027-07-01"},
+    {id:c2,org:"Summit Reach Media",email:"summit@demo.com",password:"summit1234",active:true,created:"2027-07-05"}
+  ];
+  const base=[
+    {smid:"MULTIPLAN_APXPY27DA1_M",status:"Approved",py:2027,annual:true,medium:"Mailer",classification:"Marketing",carrier:"UnitedHealthcare",benefit:"Part B Giveback",dist:"National",period:"AEP",election:"AEP Only",start:"2027-10-01",end:"2027-12-07",filing:"2027-05-07",mediaType:"Print",updated:daysAgo(0),optins:[{c:"UnitedHealthcare",d:"2027-05-05",ok:true},{c:"Humana",d:"2027-05-07",ok:true}],visibleTo:[c1]},
+    {smid:"MULTIPLAN_APXPY27DA2_M",status:"Approved",py:2027,type:"Text Ad",medium:"Mailer",classification:"Marketing",carrier:"Humana",benefit:"OTC Allowance",dist:"National",period:"AEP",election:"AEP Only",start:"2027-10-01",end:"2027-12-07",filing:"2027-05-07",mediaType:"Print",updated:daysAgo(0),optins:[{c:"Humana",d:"2027-05-07",ok:true}],visibleTo:[c1]},
+    {smid:"MULTIPLAN_APXPY27DV3_M",status:"In Review",py:2027,type:"Video",medium:"Online Video",classification:"Marketing",carrier:"Aetna",benefit:"Dental / Vision / Hearing",dist:"Regional",period:"AEP",election:"AEP Only",start:"2027-10-01",end:"2027-12-07",filing:"2027-06-02",mediaType:"Digital Video",updated:daysAgo(1),optins:[{c:"Aetna",d:"2027-06-02",ok:true},{c:"Cigna",d:"",ok:false}],visibleTo:[c1]},
+    {smid:"MULTIPLAN_APXPY27SN5_M",status:"In Review",py:2027,type:"Text Ad",medium:"Social",classification:"Marketing",carrier:"Wellcare",benefit:"Healthy Groceries or Utilities (SSBCI)",dist:"Regional",period:"AEP",election:"AEP Only",start:"2027-10-01",end:"2027-12-07",filing:"2027-06-20",mediaType:"Social",updated:daysAgo(3),optins:[{c:"Wellcare",d:"2027-06-20",ok:true}],visibleTo:[c1]},
+    {smid:"MULTIPLAN_APXPY27BN6_M",status:"Approved",py:2027,annual:true,medium:"Banner",classification:"Marketing",carrier:"UnitedHealthcare",benefit:"Part B Giveback",dist:"National",period:"AEP",election:"AEP Only",start:"2027-10-01",end:"2027-12-07",filing:"2027-05-11",mediaType:"Digital",updated:daysAgo(4),optins:[{c:"UnitedHealthcare",d:"2027-05-11",ok:true}],visibleTo:[c2]},
+    {smid:"MULTIPLAN_APXPY27WB9_C",status:"Approved",py:2027,type:"Web Page",medium:"Website",classification:"Communications",carrier:"Cigna",benefit:"—",dist:"National",period:"Year-Round",election:"N/A",start:"2027-01-01",end:"2027-12-31",filing:"2027-04-18",mediaType:"Web",updated:daysAgo(12),optins:[{c:"Cigna",d:"2027-04-18",ok:true}],visibleTo:[c2]},
+  ];
+  const creatives=base.map(c=>{
+    const o=Object.assign({id:uid('cr_')},c);
+    o.files=[{name:c.smid+".docx",cat:"Clean & Final",date:c.filing,dataUrl:""},{name:c.smid+"_HPMS_optin.pdf",cat:"HPMS Opt-In",date:c.filing,dataUrl:""}];
+    o.threads={};
+    o.history=[{from:"—",to:"Submitted",by:"System",at:c.filing+" 09:14:22"},{from:"Submitted",to:"In Review",by:"MHA Compliance",at:c.filing+" 13:02:10"}];
+    if(c.status==="Approved")o.history.push({from:"In Review",to:"Approved",by:"MHA Compliance",at:c.filing+" 16:41:05"});
+    return o;
+  });
+  creatives[2].threads[c1]=[{who:"Amber Morman",role:"admin",when:daysAgo(1),txt:"Please adjust the disclaimer font to 12-pt and add the SEP disclaimer up front."}];
+  creatives[3].threads[c1]=[{who:"Amber Morman",role:"admin",when:daysAgo(3),txt:"SSBCI audience must be declared at the outset. Add the matching SSBCI disclaimer."}];
+  DB.save('clients',clients);
+  DB.save('creatives',creatives);
+  localStorage.setItem('mha_seeded','1');
+}
+seed();
+
+/* Convert any legacy shared discussions into per-client private threads */
+function migrate(){
+  const cr=DB.load('creatives',[]);let changed=false;
+  cr.forEach(c=>{
+    if(c.threads===undefined){
+      c.threads={};
+      if(Array.isArray(c.discussions)&&c.discussions.length){
+        (c.visibleTo||[]).forEach(cid=>{c.threads[cid]=c.discussions.map(m=>({who:m.who,role:m.role==='me'?'client':'admin',when:m.when,txt:m.txt}));});
+      }
+      delete c.discussions;changed=true;
+    }
+  });
+  if(changed)DB.save('creatives',cr);
+}
+migrate();
+backfillAudit();
+
+/* ================= State + helpers ================= */
+let S={role:null,clientId:null,view:null,sub:"all",sort:{key:"updated",dir:-1},filter:{q:"",status:"",py:"",carrier:""},current:null,editId:null,sel:new Set()};
+const $=s=>document.querySelector(s);
+const main=()=>$("#main");
+function toast(m){const t=$("#toast");$("#toastMsg").textContent=m;t.classList.add("show");clearTimeout(window._tt);window._tt=setTimeout(()=>t.classList.remove("show"),2600);}
+function esc(s){return (s+"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
+function badge(s){return `<span class="badge ${badgeClass[s]||'b-nouse'}">${esc(s)}</span>`;}
+function initials(n){return (n||"?").split(" ").map(w=>w[0]).slice(0,2).join("").toUpperCase();}
+const getClients=()=>DB.load('clients',[]);
+const getCreatives=()=>DB.load('creatives',[]);
+const saveClients=v=>DB.save('clients',v);
+const saveCreatives=v=>DB.save('creatives',v);
+function clientById(id){return getClients().find(c=>c.id===id);}
+function creativeById(id){return getCreatives().find(c=>c.id===id);}
+function updateCreative(cr){const all=getCreatives();const i=all.findIndex(x=>x.id===cr.id);if(i>=0)all[i]=cr;else all.push(cr);saveCreatives(all);}
+function getThread(c,cid){return (c.threads&&c.threads[cid])?c.threads[cid]:[];}
+
+/* ---------- Audit trail ---------- */
+const AUDIT_KINDS={access:"Access",status:"Status",file:"Document",item:"Item",client:"Client"};
+function getAudit(){return DB.load('audit',[]);}
+function logAudit(kind,action,target,detail,extra){
+  const log=getAudit();
+  const actor=S.role==='admin'?'Administrator':((clientById(S.clientId)||{}).org||'Partner');
+  log.unshift(Object.assign({at:now(),actor,kind,action,target:target||'',detail:detail||''},extra||{}));
+  DB.save('audit',log.slice(0,1000));
+}
+/* One-time backfill from assignment dates captured before the log existed */
+function backfillAudit(){
+  if(localStorage.getItem(DB.pfx+'audit_backfilled'))return;
+  const ev=[], clients=DB.load('clients',[]);
+  DB.load('creatives',[]).forEach(c=>{
+    /* every current assignment, dated from sharedAt when we have it, else the item's last-updated date */
+    (c.visibleTo||[]).forEach(cid=>{
+      const cl=clients.find(x=>x.id===cid);
+      const d=(c.sharedAt&&c.sharedAt[cid])||c.updated||c.filing;
+      if(!d)return;
+      ev.push({at:d+' 00:00:00',actor:'Administrator',kind:'access',action:'Access granted',
+               target:c.smid,detail:'to '+(cl?cl.org:cid),itemId:c.id,clientId:cid,backfilled:true});
+    });
+  });
+  if(ev.length){
+    ev.sort((a,b)=>String(b.at).localeCompare(String(a.at)));
+    DB.save('audit',ev.concat(getAudit()).slice(0,1000));
+  }
+  localStorage.setItem(DB.pfx+'audit_backfilled','1');
+}
+function now(){return new Date().toISOString().slice(0,19).replace('T',' ');}
+function yesNo(v){return v?'<span class="pill" style="background:var(--green-bg);color:var(--green)">Yes</span>':'<span class="pill pend">No</span>';}
+/* A partner's own status overrides the MHA status for that partner only. */
+function statusFor(c,cid){
+  if(cid&&c.clientStatus&&c.clientStatus[cid])return c.clientStatus[cid];
+  return c.status;
+}
+/* All carrier opt-ins for an item. Falls back to the legacy single carrier field. */
+function carriersOf(c){
+  const o=(c.optins||[]).filter(x=>x&&x.c&&String(x.c).trim());
+  if(o.length)return o;
+  return c.carrier?[{c:c.carrier,d:"",ok:false}]:[];
+}
+function carrierCell(c){
+  const list=carriersOf(c);
+  if(!list.length)return '<span style="color:var(--muted-2)">—</span>';
+  return list.map(o=>`<span class="pill${o.ok?'':' pend'}" title="${o.ok?('Opted in '+(o.d||'')):'Opt-in pending'}${o.file?' · confirmation attached':''}">${esc(o.c)}${o.ok?'':' · pending'}${o.file?' 📎':''}</span>`).join(" ");
+}
+
+/* ================= Auth ================= */
+function refreshHint(){
+  const cl=getClients();
+  $("#loginHint").innerHTML=`<b>Admin:</b> sign in with your My Health Angel admin email &amp; password.`+(cl[0]?`<br><b>Demo client:</b> <b>${cl[0].email}</b> / <b>${cl[0].password}</b>`:``);
+}
+refreshHint();
+/* Session storage.
+   Remember me ON  -> localStorage, survives closing the browser (30-day expiry).
+   Remember me OFF -> sessionStorage, cleared when the browser/tab closes. */
+const SESSION_KEY='mha_session', REMEMBER_KEY='mha_remember_email', REMEMBER_DAYS=30;
+function saveSession(obj,remember){
+  const payload=JSON.stringify(Object.assign({},obj,{exp:remember?Date.now()+REMEMBER_DAYS*864e5:null}));
+  try{
+    if(remember){localStorage.setItem(SESSION_KEY,payload);sessionStorage.removeItem(SESSION_KEY);}
+    else{sessionStorage.setItem(SESSION_KEY,payload);localStorage.removeItem(SESSION_KEY);}
+  }catch(e){}
+}
+function loadSession(){
+  try{
+    const raw=sessionStorage.getItem(SESSION_KEY)||localStorage.getItem(SESSION_KEY);
+    if(!raw)return null;
+    const s=JSON.parse(raw);
+    if(s&&s.exp&&Date.now()>s.exp){clearSession();return null;}
+    return s;
+  }catch(e){return null;}
+}
+function clearSession(){try{localStorage.removeItem(SESSION_KEY);sessionStorage.removeItem(SESSION_KEY);}catch(e){}}
+function prefillLogin(){
+  try{
+    const e=localStorage.getItem(REMEMBER_KEY);
+    if(e){$("#email").value=e;$("#remember").checked=true;}
+  }catch(e){}
+}
+
+$("#loginForm").addEventListener("submit",e=>{
+  e.preventDefault();
+  const raw=$("#email").value.trim(), em=raw.toLowerCase(), pw=$("#pw").value;
+  const remember=$("#remember").checked;
+  const finish=(role,cid)=>{
+    try{ if(remember)localStorage.setItem(REMEMBER_KEY,raw); else localStorage.removeItem(REMEMBER_KEY); }catch(e){}
+    startSession(role,cid,remember);
+  };
+  if(em===ADMIN.email.toLowerCase() && pw===ADMIN.password){ finish('admin',null); return; }
+  const c=getClients().find(c=>c.email.toLowerCase()===em && c.password===pw);
+  if(c){ if(!c.active){toast("This account is deactivated. Contact your admin.");return;} finish('client',c.id); return; }
+  toast("Invalid credentials. Check the demo login below.");
+});
+function startSession(role,clientId,remember){
+  S.role=role;S.clientId=clientId;S.sel.clear();
+  saveSession({role,clientId},remember);
+  $("#login").classList.add("hidden");$("#app").classList.add("show");
+  buildShell();
+  nav(role==='admin'?'overview':'home');
+}
+function logout(){
+  clearSession();S.role=null;S.clientId=null;
+  $("#app").classList.remove("show");$("#login").classList.remove("hidden");
+  $("#pw").value="";$("#email").value="";$("#remember").checked=false;
+  prefillLogin();refreshHint();
+}
+function restore(){
+  const s=loadSession();if(!s||!s.role)return;
+  if(s.role==='client'&&(!clientById(s.clientId)||!clientById(s.clientId).active))return;
+  let remembered=false;try{remembered=!!localStorage.getItem(SESSION_KEY);}catch(e){}
+  startSession(s.role,s.clientId,remembered);
+}
+
+/* ================= Shell ================= */
+function buildShell(){
+  const logo=`<span class="brandwrap"><img class="side-logo" src="https://myhealthangel.com/images/logo-black.png" alt="MyHealthAngel"></span>`;
+  let nav_;
+  if(S.role==='admin'){
+    nav_=`
+      <span class="role-chip">Admin</span>
+      <button class="nav-item" data-view="overview" onclick="nav('overview')">${ic('home')}Overview</button>
+      <button class="nav-item" data-view="clients" onclick="nav('clients')">${ic('users')}Client Logins</button>
+      <button class="nav-item" data-view="items" onclick="nav('items')">${ic('layers')}Creatives / Items</button>
+      <button class="nav-item" data-view="audit" onclick="nav('audit')">${ic('log')}Audit Log</button>`;
+  }else{
+    const org=clientById(S.clientId);
+    nav_=`
+      <span class="role-chip client">Partner</span>
+      <button class="nav-item" data-view="home" onclick="nav('home')">${ic('home')}Home</button>
+      <button class="nav-item" data-view="creatives" onclick="nav('creatives')">${ic('layers')}Creatives</button>
+      <div class="nav-sub">
+        <button class="active" data-sub="all" onclick="nav('creatives','all')">All Creatives</button>
+        <button data-sub="recent" onclick="nav('creatives','recent')">Recent</button>
+      </div>
+      <button class="nav-item" data-view="exports" onclick="nav('exports')">${ic('export')}Exports</button>`;
+  }
+  $("#sidebar").innerHTML=`${logo}${nav_}<div class="side-foot">MyHealthAngel Compliance Portal · v1.0 (prototype)</div>`;
+  // topbar identity
+  if(S.role==='admin'){$("#whoName").innerHTML=`MHA Compliance<span>Administrator</span>`;$("#whoAv").textContent="AD";}
+  else{const o=clientById(S.clientId);$("#whoName").innerHTML=`${esc(o.org)}<span>Partner organization</span>`;$("#whoAv").textContent=initials(o.org);}
+}
+function ic(n){const p={
+  home:'<path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/>',
+  users:'<circle cx="9" cy="8" r="3"/><path d="M3 20a6 6 0 0 1 12 0"/><path d="M16 6a3 3 0 0 1 0 6M21 20a6 6 0 0 0-4-5.6"/>',
+  layers:'<path d="M12 2 2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/>',
+  export:'<path d="M4 4h13l3 3v13H4z"/><path d="M8 4v6h8"/>',
+  log:'<path d="M9 3h10a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H9"/><path d="M13 8H5M13 12H5M13 16H5"/><path d="M3 8v8"/>'
+}[n];return `<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">${p}</svg>`;}
+
+function setActive(view,sub){
+  document.querySelectorAll(".nav-item").forEach(n=>n.classList.toggle("active",n.dataset.view===view));
+  document.querySelectorAll(".nav-sub button").forEach(b=>b.classList.toggle("active",view==="creatives"&&b.dataset.sub===(sub||S.sub)));
+}
+function nav(view,sub){
+  S.view=view;if(sub)S.sub=sub;
+  setActive(view,sub);
+  const names={overview:"Overview",clients:"Client Logins",items:"Creatives / Items",audit:"Audit Log",home:"Home",creatives:"Creatives",exports:"Exports"};
+  $("#crumbs").innerHTML=view==="creatives"?`Creatives / <b>${S.sub==="recent"?"Recent":"All Creatives"}</b>`:`<b>${names[view]||view}</b>`;
+  ({overview:renderOverview,clients:renderClients,items:renderItems,audit:renderAudit,itemView:renderItemView,itemEditor:renderItemEditor,home:renderHome,creatives:renderCreatives,exports:renderExports}[view]||(()=>{}))();
+  main().scrollTop=0;
+}
+
+/* ================= ADMIN: Overview ================= */
+function renderOverview(){
+  const cl=getClients(),cr=getCreatives();
+  const active=cl.filter(c=>c.active).length;
+  const shared=cr.filter(c=>(c.visibleTo||[]).length).length;
+  main().innerHTML=`
+    <div class="page-title">Admin Overview</div>
+    <div class="page-sub">Manage partner logins, creative items, documents, and per-client access.</div>
+    <div class="warn">⚠️ <div><b>Prototype note:</b> data is saved in this browser only (localStorage). For real assigned passwords, secure per-client isolation, and shared file storage, this connects to a backend when deployed to your site.</div></div>
+    <div class="cards">
+      <div class="stat all"><div class="lbl">Client Logins</div><div class="num click" onclick="nav('clients')">${cl.length}</div></div>
+      <div class="stat new"><div class="lbl">Active Clients</div><div class="num">${active}</div></div>
+      <div class="stat"><div class="lbl">Creative Items</div><div class="num click" onclick="nav('items')">${cr.length}</div></div>
+      <div class="stat day"><div class="lbl">Items Shared</div><div class="num">${shared}</div></div>
+    </div>
+    <div class="grid-2">
+      <div class="panel"><div class="panel-h">Quick actions</div><div class="panel-b" style="padding:14px">
+        <button class="btn btn-primary btn-sm" style="margin:2px 6px 2px 0" onclick="openClientModal()">+ New Client Login</button>
+        <button class="btn btn-cyan btn-sm" style="margin:2px 0" onclick="S.editId=null;nav('itemEditor')">+ New Creative Item</button>
+      </div></div>
+      <div class="panel"><div class="panel-h">Recent items</div><div class="panel-b">
+        ${cr.slice(0,4).map(c=>`<button class="thread" onclick="S.editId='${c.id}';nav('itemView')"><div class="t">${esc(c.smid)}</div><div class="m">${badge(c.status)} · shared with ${(c.visibleTo||[]).length} client(s)</div></button>`).join("")||`<div class="empty">No items yet.</div>`}
+      </div></div>
+    </div>`;
+}
+
+/* ================= ADMIN: Clients ================= */
+function renderClients(){
+  const cl=getClients(),cr=getCreatives();
+  main().innerHTML=`
+    <div class="page-head"><div><div class="page-title">Client Logins</div><div class="page-sub">Create and manage partner accounts. Each client sees only the items you share with them.</div></div>
+      <button class="btn btn-primary" onclick="openClientModal()">+ New Client Login</button></div>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Organization</th><th>Login Email</th><th>Password</th><th>Status</th><th>Items Shared</th><th>Created</th><th></th></tr></thead>
+      <tbody>${cl.length?cl.map(c=>{
+        const shared=cr.filter(x=>(x.visibleTo||[]).includes(c.id)).length;
+        return `<tr>
+          <td style="font-weight:700">${esc(c.org)}</td>
+          <td>${esc(c.email)}</td>
+          <td><code style="font-size:12px">${esc(c.password)}</code></td>
+          <td>${c.active?'<span class="badge b-active">Active</span>':'<span class="badge b-inactive">Inactive</span>'}</td>
+          <td><span class="pill">${shared}</span></td>
+          <td>${c.created}</td>
+          <td><div class="row-actions">
+            <button class="btn btn-ghost btn-sm" onclick="openClientModal('${c.id}')">Edit</button>
+            <button class="btn btn-ghost btn-sm" onclick="toggleClientActive('${c.id}')">${c.active?'Deactivate':'Activate'}</button>
+            <button class="btn btn-danger btn-sm" onclick="deleteClient('${c.id}')">Delete</button>
+          </div></td></tr>`;}).join(""):`<tr><td colspan="7"><div class="empty">No client logins yet. Create one to get started.</div></td></tr>`}</tbody>
+    </table><div class="tablefoot"><span>${cl.length} client login(s)</span><span>Access is controlled per item under Creatives / Items</span></div></div>`;
+}
+function openClientModal(id){
+  const c=id?clientById(id):null;
+  const o=modal(`
+    <div class="modal-h"><h3>${c?'Edit Client Login':'New Client Login'}</h3><button class="x" onclick="this.closest('.overlay').remove()">×</button></div>
+    <div class="modal-b">
+      <div class="ff full" style="margin-bottom:12px"><label>Organization name</label><input class="inp" id="cOrg" value="${c?esc(c.org):''}" placeholder="e.g. Bright Path Marketing"></div>
+      <div class="ff full" style="margin-bottom:12px"><label>Login email</label><input class="inp" id="cEmail" value="${c?esc(c.email):''}" placeholder="partner@company.com"></div>
+      <div class="ff full" style="margin-bottom:12px"><label>Assigned password</label>
+        <div style="display:flex;gap:8px"><input class="inp" id="cPass" value="${c?esc(c.password):''}" placeholder="Assign a password"><button class="btn btn-ghost btn-sm" onclick="document.getElementById('cPass').value=genPass()">Generate</button></div></div>
+      <label class="chkbox"><input type="checkbox" id="cActive" ${!c||c.active?'checked':''}> Account active</label>
+    </div>
+    <div class="modal-f"><button class="btn btn-ghost btn-sm" onclick="this.closest('.overlay').remove()">Cancel</button>
+      <button class="btn btn-primary btn-sm" onclick="saveClient('${id||''}',this)">${c?'Save changes':'Create login'}</button></div>`);
+}
+function genPass(){const a="ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789";let s="";for(let i=0;i<10;i++)s+=a[Math.floor(Math.random()*a.length)];return s;}
+function saveClient(id,btn){
+  const org=$("#cOrg").value.trim(),email=$("#cEmail").value.trim(),pass=$("#cPass").value.trim(),active=$("#cActive").checked;
+  if(!org||!email||!pass){toast("Fill in organization, email, and password");return;}
+  const cl=getClients();
+  if(cl.some(c=>c.email.toLowerCase()===email.toLowerCase() && c.id!==id)){toast("That email is already used by another client");return;}
+  if(id){const c=cl.find(x=>x.id===id);const wasActive=c.active;Object.assign(c,{org,email,password:pass,active});saveClients(cl);logAudit('client','Client login updated',org,'',{clientId:id});if(wasActive!==active)logAudit('client',active?'Client activated':'Client deactivated',org,'',{clientId:id});btn.closest('.overlay').remove();toast("Client updated");}
+  else{const nc={id:uid('c_'),org,email,password:pass,active,created:today()};cl.push(nc);saveClients(cl);logAudit('client','Client login created',org,'',{clientId:nc.id});btn.closest('.overlay').remove();
+    modal(`<div class="modal-h"><h3>Client login created</h3><button class="x" onclick="this.closest('.overlay').remove()">×</button></div>
+      <div class="modal-b"><p style="font-size:13px;color:var(--muted);margin-bottom:6px">Share these credentials with <b>${esc(org)}</b>:</p>
+      <div class="cred-box">Portal: <code>your-site.com/portal</code><br>Email: <code>${esc(email)}</code><br>Password: <code>${esc(pass)}</code></div>
+      <p style="font-size:12px;color:var(--muted);margin-top:10px">Next: open <b>Creatives / Items</b> and toggle which materials this client can see.</p></div>
+      <div class="modal-f"><button class="btn btn-primary btn-sm" onclick="this.closest('.overlay').remove()">Done</button></div>`);
+  }
+  refreshHint();if(S.view==='clients')renderClients();else if(S.view==='overview')renderOverview();
+}
+function toggleClientActive(id){const cl=getClients();const c=cl.find(x=>x.id===id);c.active=!c.active;saveClients(cl);logAudit('client',c.active?'Client activated':'Client deactivated',c.org,'',{clientId:id});renderClients();toast(c.active?"Client activated":"Client deactivated");}
+function deleteClient(id){const c=clientById(id);confirmModal(`Delete client "${esc(c.org)}"?`,"This removes their login and their access to all items. This cannot be undone.",()=>{
+  logAudit('client','Client login deleted',c.org,'',{clientId:id});
+  getCreatives().forEach(x=>{if((x.visibleTo||[]).includes(id))logAudit('access','Access revoked',x.smid,'from '+c.org+' (client deleted)',{itemId:x.id,clientId:id});});
+  let cl=getClients().filter(x=>x.id!==id);saveClients(cl);
+  const cr=getCreatives();cr.forEach(x=>x.visibleTo=(x.visibleTo||[]).filter(v=>v!==id));saveCreatives(cr);
+  renderClients();refreshHint();toast("Client deleted");});}
+
+/* ================= ADMIN: Items list ================= */
+function renderItems(){
+  const cr=getCreatives(),cl=getClients();
+  main().innerHTML=`
+    <div class="page-head"><div><div class="page-title">Creatives / Items</div><div class="page-sub">Select an item to open it — edit, delete, manage access, and reply to partners from inside the item.</div></div>
+      <button class="btn btn-cyan" onclick="S.editId=null;nav('itemEditor')">+ New Creative Item</button></div>
+    <div class="selbar none" id="selBar">
+      <span id="selCount">No creatives selected</span>
+      <button class="btn btn-cyan btn-sm" onclick="exportSelected('csv')">⬇ Export summary (.csv)</button>
+      <button class="btn btn-ghost btn-sm" onclick="exportSelected('docs')">⬇ Download documents</button>
+      <button class="btn btn-ghost btn-sm" onclick="clearSel()">Clear</button>
+      <span class="sp">Tick items to export, or use the header box to select all.</span>
+    </div>
+    <div class="table-wrap"><table>
+      <thead><tr><th class="chkcell"><input type="checkbox" id="selAll" title="Select all" onchange="toggleSelAll(this.checked)"></th><th>SMID</th><th>Status</th><th>Plan Year</th><th>Carrier Opt-In</th><th>Classification</th><th>Files</th><th>Shared With</th></tr></thead>
+      <tbody>${cr.length?cr.map(c=>`<tr class="clickable" onclick="S.editId='${c.id}';nav('itemView')">
+        <td class="chkcell"><input type="checkbox" class="rowChk" data-id="${c.id}" ${S.sel.has(c.id)?'checked':''} onclick="event.stopPropagation()" onchange="toggleSel('${c.id}',this.checked)"></td>
+        <td class="smid">${esc(c.smid)}</td><td>${badge(c.status)}</td><td>${c.py}</td><td class="wrapcell">${carrierCell(c)}</td><td>${esc(c.classification)}</td>
+        <td><span class="pill">${(c.files||[]).length}</span></td>
+        <td>${(c.visibleTo||[]).length?(c.visibleTo||[]).map(id=>{const cc=clientById(id);return cc?`<span class="pill" style="margin:1px">${esc(cc.org)}</span>`:''}).join(" "):'<span style="color:var(--muted-2)">— none —</span>'}</td></tr>`).join(""):`<tr><td colspan="8"><div class="empty">No items yet. Create one to begin.</div></td></tr>`}</tbody>
+    </table><div class="tablefoot"><span>${cr.length} item(s)</span><span>${cl.length} client login(s)</span></div></div>`;
+  updateSelBar();
+}
+function deleteItem(id){const c=creativeById(id);confirmModal(`Delete item "${esc(c.smid)}"?`,"This removes the item, its documents, and its access for all clients.",()=>{logAudit('item','Item deleted',c.smid,'',{itemId:id});saveCreatives(getCreatives().filter(x=>x.id!==id));S.editId=null;nav('items');toast("Item deleted");});}
+
+/* ================= ADMIN: Item editor ================= */
+function renderItemEditor(){
+  const editing=!!S.editId;
+  const c=editing?creativeById(S.editId):{smid:"",status:"Submitted",py:2027,type:"",medium:"",classification:"Marketing",benefit:"",dist:"National",period:"AEP",election:"AEP Only",start:"",end:"",filing:"",mediaType:"",optins:[],files:[],visibleTo:[],threads:{},history:[]};
+  window._draftFiles=(c.files||[]).slice();
+  window._draftOptins=(c.optins||[]).slice();
+  const sel=(id,opts,val)=>`<select class="inp" id="${id}">${opts.map(o=>`<option ${String(val)===String(o)?'selected':''}>${o}</option>`).join("")}</select>`;
+  const cl=getClients();
+  $("#crumbs").innerHTML=`Creatives / Items / <b>${editing?esc(c.smid):'New Item'}</b>`;
+  main().innerHTML=`
+    <button class="back" onclick="nav('${editing?'itemView':'items'}')">← ${editing?'Back to item':'Back to Items'}</button>
+    <div class="page-title">${editing?'Edit Item':'New Creative Item'}</div>
+    <div class="page-sub">Enter the compliance data exactly as it should appear to the client.</div>
+
+    <div class="form-card"><div class="fh">Identifiers &amp; Classification</div>
+      <div class="form-grid">
+        <div class="ff full"><label>SMID</label><input class="inp" id="f_smid" value="${esc(c.smid)}" placeholder="MULTIPLAN_APXPY27DA1_M"></div>
+        <div class="ff"><label>Status</label>${sel('f_status',STATUSES,c.status)}</div>
+        <div class="ff"><label>Plan Year</label>${sel('f_py',[2027,2026,2025],c.py)}</div>
+        <div class="ff"><label>Classification</label>${sel('f_classification',["Marketing","Communications"],c.classification)}</div>
+        <div class="ff"><label>Annual Re-Submission</label>
+          <label class="chkbox" style="margin-top:7px"><input type="checkbox" id="f_annual" ${c.annual?'checked':''}> This material is an annual re-submission</label>
+          <span class="help">Partners see this as Yes or No.</span></div>
+        <div class="ff"><label>Medium</label><input class="inp" id="f_medium" value="${esc(c.medium)}" placeholder="Mailer, Social, TV…"></div>
+        <div class="ff"><label>Benefit Type</label><input class="inp" id="f_benefit" value="${esc(c.benefit)}" placeholder="Part B Giveback (high-level only)"></div>
+        <div class="ff"><label>Distribution Area</label><input class="inp" id="f_dist" value="${esc(c.dist)}" placeholder="National / Regional"></div>
+      </div></div>
+
+    <div class="form-card"><div class="fh">Dates &amp; HPMS</div>
+      <div class="form-grid">
+        <div class="ff"><label>Time Period</label><input class="inp" id="f_period" value="${esc(c.period)}" placeholder="AEP / SEP / Year-Round"></div>
+        <div class="ff"><label>Election Period</label><input class="inp" id="f_election" value="${esc(c.election)}" placeholder="AEP Only / SEP / N/A"></div>
+        <div class="ff"><label>Start Date</label><input class="inp" id="f_start" type="date" value="${esc(c.start)}"></div>
+        <div class="ff"><label>End Date</label><input class="inp" id="f_end" type="date" value="${esc(c.end)}"></div>
+        <div class="ff"><label>HPMS Filing Date</label><input class="inp" id="f_filing" type="date" value="${esc(c.filing)}"></div>
+        <div class="ff"><label>Media Type</label><input class="inp" id="f_mediaType" value="${esc(c.mediaType)}" placeholder="Print / Digital / Broadcast"></div>
+      </div>
+      <div style="padding:0 18px 18px"><label style="font-size:12px;font-weight:700;color:var(--navy)">Carrier Opt-Ins (HPMS)</label>
+        <div class="help" style="margin-bottom:6px">Add one row per carrier. All of these show to partners in the Carrier Opt-In column.</div>
+        <div class="optin-editor" id="optinEditor"></div>
+        <button class="btn btn-ghost btn-sm" onclick="addOptin()">+ Add carrier opt-in</button></div></div>
+
+    <div class="form-card"><div class="fh">Documents &amp; Files</div>
+      <div style="padding:18px">
+        <label class="file-drop" style="display:block;cursor:pointer">
+          <input type="file" id="f_files" multiple accept=".pdf,.xls,.xlsx,.doc,.docx,.png,.jpg,.jpeg,.gif,.webp" style="display:none" onchange="onFilePick(this)">
+          <b>Click to upload</b> PDF, Excel, Word, or image files<br><span style="font-size:11.5px">Stored with this item · categorize each after adding</span>
+        </label>
+        <div id="fileList"></div>
+      </div></div>
+
+    <div class="form-card"><div class="fh">Client Visibility &amp; Access</div>
+      <p style="padding:12px 18px 0;font-size:12.5px;color:var(--muted)">Toggle which client logins can see this item and its documents. Off = no access.</p>
+      <div class="vis-list" id="visList">${cl.length?cl.map(cc=>`
+        <div class="vis-row"><div><div class="n">${esc(cc.org)}</div><div class="e">${esc(cc.email)}${cc.active?'':' · inactive'}${(c.clientStatus&&c.clientStatus[cc.id])?` · their status: <b>${esc(c.clientStatus[cc.id])}</b>`:''}</div></div>
+        <label class="switch"><input type="checkbox" class="visChk" data-id="${cc.id}" ${(c.visibleTo||[]).includes(cc.id)?'checked':''}><span class="sl"></span></label></div>`).join(""):`<div class="empty" style="grid-column:1/-1">No clients yet — create client logins first.</div>`}</div></div>
+
+    <div class="form-actions">
+      <button class="btn btn-ghost" onclick="nav('${editing?'itemView':'items'}')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveItem()">${editing?'Save changes':'Create item'}</button>
+    </div>`;
+  renderOptinEditor();renderDraftFiles();
+}
+function renderOptinEditor(){
+  const el=$("#optinEditor");if(!el)return;
+  el.innerHTML=window._draftOptins.map((o,i)=>`<div class="oe-card">
+    <div class="oe-row">
+      <input class="inp" placeholder="Carrier" value="${esc(o.c)}" onchange="window._draftOptins[${i}].c=this.value">
+      <input class="inp" type="date" value="${esc(o.d)}" onchange="window._draftOptins[${i}].d=this.value">
+      <label class="chkbox"><input type="checkbox" ${o.ok?'checked':''} onchange="window._draftOptins[${i}].ok=this.checked"> Opt-in</label>
+      <button class="btn btn-danger btn-sm" onclick="window._draftOptins.splice(${i},1);renderOptinEditor()">×</button>
+    </div>
+    <div class="oe-attach">
+      <span class="lab">Opt-in confirmation</span>
+      ${o.file?`<span class="have">${fileIcon(o.file.name)}<b>${esc(o.file.name)}</b></span>
+        <button class="btn btn-danger btn-sm" onclick="removeOptinFile(${i})">Remove</button>`
+      :`<label class="pick">📎 Attach screenshot / PDF
+        <input type="file" accept=".png,.jpg,.jpeg,.gif,.webp,.pdf" style="display:none" onchange="attachOptinFile(${i},this)"></label>
+        <span style="font-size:11.5px;color:var(--muted-2)">Shown to partners on this carrier's row</span>`}
+    </div></div>`).join("")||`<p style="font-size:12.5px;color:var(--muted);margin-bottom:8px">No carrier opt-ins added yet.</p>`;
+}
+function attachOptinFile(i,input){
+  const f=input.files&&input.files[0];if(!f)return;
+  const r=new FileReader();
+  r.onload=()=>{window._draftOptins[i].file={name:f.name,dataUrl:r.result,date:today()};renderOptinEditor();toast("Confirmation attached");};
+  r.readAsDataURL(f);
+}
+function removeOptinFile(i){delete window._draftOptins[i].file;renderOptinEditor();toast("Confirmation removed");}
+function addOptin(){window._draftOptins.push({c:"",d:"",ok:true});renderOptinEditor();}
+function onFilePick(input){
+  const files=[...input.files];if(!files.length)return;let n=files.length;
+  files.forEach(f=>{const r=new FileReader();r.onload=()=>{window._draftFiles.push({name:f.name,cat:catFromName(f.name),date:today(),dataUrl:r.result});if(--n===0)renderDraftFiles();};r.readAsDataURL(f);});
+  input.value="";
+}
+function catFromName(n){n=n.toLowerCase();if(/\.(xls|xlsx|csv)$/.test(n))return"Excel Report";if(/\.(doc|docx)$/.test(n))return"Clean & Final";if(/\.(png|jpg|jpeg|gif|webp)$/.test(n))return"Screenshot";if(/optin|opt-in/.test(n))return"HPMS Opt-In";return"Document";}
+function renderDraftFiles(){
+  const el=$("#fileList");if(!el)return;
+  el.innerHTML=window._draftFiles.map((f,i)=>`<div class="file-chip"><div class="l">${fileIcon(f.name)}<div><b style="display:block">${esc(f.name)}</b>
+    <span class="cat">${esc(f.cat)} · ${f.date}</span></div></div>
+    <div style="display:flex;gap:6px;align-items:center">
+      <input class="inp" style="width:150px;padding:6px 9px;font-size:12px" value="${esc(f.cat)}" onchange="window._draftFiles[${i}].cat=this.value" title="Category">
+      <button class="btn btn-danger btn-sm" onclick="window._draftFiles.splice(${i},1);renderDraftFiles()">Remove</button></div></div>`).join("")||`<p style="font-size:12.5px;color:var(--muted);margin-top:8px">No files added yet.</p>`;
+}
+function fileIcon(name){return `<svg class="ic" style="width:15px;height:15px;color:var(--cyan-2)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>`;}
+function saveItem(){
+  const g=id=>{const el=$(id);return el?el.value:"";};
+  const smid=g("#f_smid").trim();
+  if(!smid){toast("SMID is required");return;}
+  const visibleTo=[...document.querySelectorAll(".visChk")].filter(x=>x.checked).map(x=>x.dataset.id);
+  /* Stamp the date a material is newly assigned to a partner — drives their Recent Updates feed. */
+  const existing=S.editId?creativeById(S.editId):null;
+  const prevVisible=(existing&&existing.visibleTo)||[];
+  const sharedAt=Object.assign({},(existing&&existing.sharedAt)||{});
+  visibleTo.forEach(cid=>{if(!prevVisible.includes(cid))sharedAt[cid]=today();});
+  Object.keys(sharedAt).forEach(cid=>{if(!visibleTo.includes(cid))delete sharedAt[cid];});
+  const data={
+    smid,status:g("#f_status"),py:parseInt(g("#f_py"))||2027,classification:g("#f_classification"),
+    annual:!!($("#f_annual")&&$("#f_annual").checked),medium:g("#f_medium").trim(),benefit:g("#f_benefit").trim()||"—",dist:g("#f_dist").trim()||"National",
+    period:g("#f_period").trim(),election:g("#f_election").trim(),start:g("#f_start"),end:g("#f_end"),filing:g("#f_filing"),mediaType:g("#f_mediaType").trim(),
+    optins:window._draftOptins.filter(o=>o.c.trim()),files:window._draftFiles.slice(),visibleTo,sharedAt,updated:today()
+  };
+  if(S.editId){
+    const c=creativeById(S.editId);const prevStatus=c.status;
+    const prevFiles=(c.files||[]).map(f=>f.name);
+    Object.assign(c,data);
+    if(prevStatus!==data.status){
+      c.history.push({from:prevStatus,to:data.status,by:"MHA Compliance",at:new Date().toISOString().slice(0,19).replace('T',' ')});
+      logAudit('status','Status changed',smid,prevStatus+' → '+data.status,{itemId:c.id});
+    }
+    visibleTo.filter(cid=>!prevVisible.includes(cid)).forEach(cid=>{const cl=clientById(cid);logAudit('access','Access granted',smid,'to '+(cl?cl.org:cid),{itemId:c.id,clientId:cid});});
+    prevVisible.filter(cid=>!visibleTo.includes(cid)).forEach(cid=>{const cl=clientById(cid);logAudit('access','Access revoked',smid,'from '+(cl?cl.org:cid),{itemId:c.id,clientId:cid});});
+    const nowFiles=data.files.map(f=>f.name);
+    nowFiles.filter(n=>!prevFiles.includes(n)).forEach(n=>logAudit('file','Document added',smid,n,{itemId:c.id}));
+    prevFiles.filter(n=>!nowFiles.includes(n)).forEach(n=>logAudit('file','Document removed',smid,n,{itemId:c.id}));
+    updateCreative(c);toast("Item saved");
+  }else{
+    const c=Object.assign({id:uid('cr_'),threads:{},history:[{from:"—",to:data.status,by:"MHA Compliance",at:new Date().toISOString().slice(0,19).replace('T',' ')}]},data);
+    updateCreative(c);S.editId=c.id;
+    logAudit('item','Item created',smid,'',{itemId:c.id});
+    visibleTo.forEach(cid=>{const cl=clientById(cid);logAudit('access','Access granted',smid,'to '+(cl?cl.org:cid),{itemId:c.id,clientId:cid});});
+    data.files.forEach(f=>logAudit('file','Document added',smid,f.name,{itemId:c.id}));
+    toast("Item created");
+  }
+  nav('itemView');
+}
+
+/* ================= ADMIN: Audit Log ================= */
+function auditFiltered(){
+  let rows=getAudit();
+  const f=S.auditFilter||{q:"",kind:""};
+  if(f.kind)rows=rows.filter(e=>e.kind===f.kind);
+  if(f.q){const q=f.q.toLowerCase();rows=rows.filter(e=>((e.actor||'')+' '+(e.action||'')+' '+(e.target||'')+' '+(e.detail||'')).toLowerCase().includes(q));}
+  return rows;
+}
+function setAuditFilter(k,v){S.auditFilter=Object.assign({q:"",kind:""},S.auditFilter);S.auditFilter[k]=v;renderAudit();}
+function auditChip(kind){
+  const col={access:'background:#e0f4fd;color:var(--cyan-2)',status:'background:var(--amber-bg);color:var(--amber)',
+             file:'background:var(--green-bg);color:var(--green)',item:'background:#eceef3;color:var(--navy)',
+             client:'background:#f0e6fa;color:#7a4fb0'}[kind]||'background:#eceef3;color:var(--navy)';
+  return `<span class="pill" style="${col}">${AUDIT_KINDS[kind]||kind}</span>`;
+}
+function renderAudit(){
+  const rows=auditFiltered(), total=getAudit().length;
+  const f=S.auditFilter||{q:"",kind:""};
+  main().innerHTML=`
+    <div class="page-head"><div><div class="page-title">Audit Log</div>
+      <div class="page-sub">Chronological record of access changes, status changes, documents, items and client accounts.</div></div>
+      <button class="btn btn-cyan" onclick="exportAuditCsv()">⬇ Export log (.csv)</button></div>
+    <div class="toolbar">
+      <div class="search"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+        <input id="aq" placeholder="Search SMID, partner, action…" value="${esc(f.q)}" oninput="setAuditFilter('q',this.value)"></div>
+      <select onchange="setAuditFilter('kind',this.value)"><option value="">All activity</option>
+        ${Object.keys(AUDIT_KINDS).map(k=>`<option value="${k}" ${f.kind===k?'selected':''}>${AUDIT_KINDS[k]}</option>`).join("")}</select>
+      <button class="btn btn-ghost btn-sm" onclick="S.auditFilter={q:'',kind:''};renderAudit()">Reset</button>
+      <span class="updated">${rows.length} of ${total} entries</span>
+    </div>
+    <div class="table-wrap"><table>
+      <thead><tr><th>When</th><th>Activity</th><th>Action</th><th>Item / Client</th><th>Detail</th><th>By</th></tr></thead>
+      <tbody>${rows.length?rows.map(e=>`<tr>
+        <td style="white-space:nowrap">${esc(e.at)}${e.backfilled?' <span class="pill pend" style="font-size:10px">backfilled</span>':''}</td>
+        <td>${auditChip(e.kind)}</td>
+        <td style="font-weight:600">${esc(e.action)}</td>
+        <td class="smid">${esc(e.target)}</td>
+        <td class="wrapcell" style="color:var(--muted)">${esc(e.detail)}</td>
+        <td>${esc(e.actor)}</td></tr>`).join(""):`<tr><td colspan="6"><div class="empty">${total?'No entries match your filters.':'No activity recorded yet.'}</div></td></tr>`}</tbody>
+    </table><div class="tablefoot"><span>${rows.length} entr${rows.length===1?'y':'ies'}</span><span>Newest first · retains the most recent 1,000 events</span></div></div>
+    <p style="color:var(--muted);font-size:12px;margin-top:10px">Entries marked <b>backfilled</b> were reconstructed from assignment dates recorded before the log existed — date only, no time.</p>`;
+  const aq=$("#aq");if(aq){aq.focus();aq.setSelectionRange(aq.value.length,aq.value.length);}
+}
+function exportAuditCsv(){
+  const rows=auditFiltered();
+  if(!rows.length){toast("Nothing to export");return;}
+  const head=["When","Activity","Action","Item / Client","Detail","By","Backfilled"];
+  const lines=[head.join(",")];
+  rows.forEach(e=>lines.push([e.at,AUDIT_KINDS[e.kind]||e.kind,e.action,e.target,e.detail,e.actor,e.backfilled?"Yes":"No"].map(csvEscape).join(",")));
+  downloadText(lines.join("\n"),`audit-log-${today()}.csv`,"text/csv");
+  toast(`Exported ${rows.length} log entr${rows.length===1?'y':'ies'}`);
+}
+
+/* ================= CLIENT: data access ================= */
+function clientCreatives(){return getCreatives().filter(c=>(c.visibleTo||[]).includes(S.clientId));}
+
+/* Recent Updates feed for a partner: new assignments, MHA replies, and MHA status changes. */
+function recentUpdates(cid){
+  const evts=[];
+  clientCreatives().forEach(c=>{
+    const when=(c.sharedAt&&c.sharedAt[cid])||c.updated||c.filing||"";
+    evts.push({kind:"shared",when,id:c.id,smid:c.smid,txt:"New material shared with your organization"});
+    const replies=getThread(c,cid).filter(m=>m.role==='admin');
+    if(replies.length){
+      const last=replies[replies.length-1];
+      evts.push({kind:"reply",when:last.when,id:c.id,smid:c.smid,txt:"My Health Angel replied: "+last.txt});
+    }
+    (c.history||[]).slice(-1).forEach(h=>{
+      if(h&&h.to)evts.push({kind:"status",when:String(h.at||"").slice(0,10),id:c.id,smid:c.smid,txt:"MHA status set to "+h.to});
+    });
+  });
+  const t=today();
+  return evts.filter(e=>e.when&&e.when<=t)          // ignore future-dated (plan-year) timestamps
+             .sort((a,b)=>String(b.when).localeCompare(String(a.when)))
+             .slice(0,8);
+}
+function updateIcon(k){
+  return {shared:"📄",reply:"💬",status:"✅"}[k]||"•";
+}
+
+function renderHome(){
+  const list=clientCreatives();
+  const all=list.length, nw=list.filter(c=>statusFor(c,S.clientId)==="Submitted").length,
+    day=list.filter(c=>c.updated>=daysAgo(1)).length, week=list.filter(c=>c.updated>=daysAgo(7)).length,
+    threads=list.filter(c=>getThread(c,S.clientId).length);
+  const updates=recentUpdates(S.clientId), fresh=daysAgo(7), newCount=updates.filter(u=>u.when>=fresh).length;
+  const org=clientById(S.clientId);
+  main().innerHTML=`
+    <div class="page-title">Compliance Portal</div>
+    <div class="page-sub">Welcome back, ${esc(org.org)} — here's a summary of your creative assets.</div>
+    <div class="banner"><span class="dot"></span><div><h4>MyHealthAngel Compliance Portal</h4>
+      <p>Access real-time visibility into the creative assets and compliance documentation shared with your organization. Information is maintained and updated as materials progress through review, revision, submission, and approval.<br><br>Need assistance? For questions regarding marketing materials, approval records, or compliance documentation, contact <a href="mailto:compliance@myhealthangel.com">compliance@myhealthangel.com</a>.</p></div></div>
+    <div class="section-h"><h3>Creatives</h3></div>
+    <div class="cards">
+      <div class="stat all"><div class="lbl">All</div><div class="num click" onclick="nav('creatives','all')">${all}</div></div>
+      <div class="stat new"><div class="lbl">New</div><div class="num click" onclick="S.filter.status='Submitted';nav('creatives','all')">${nw}</div></div>
+      <div class="stat day"><div class="lbl">Updated · Last Day</div><div class="num">${day}</div></div>
+      <div class="stat week"><div class="lbl">Updated · Last Week</div><div class="num">${week}</div></div>
+    </div>
+    <div class="section-h"><h3>Activity</h3></div>
+    <div class="grid-2">
+      <div class="panel"><div class="panel-h">Discussions</div><div class="panel-b">
+        ${threads.length?threads.map(c=>{const m=getThread(c,S.clientId)[0];return `<button class="thread" onclick="openCreative('${c.id}')"><div class="t">${esc(m.txt.slice(0,54))}${m.txt.length>54?"…":""}</div><div class="m"><b>${esc(c.smid)}</b> · ${m.when}</div></button>`;}).join(""):`<div class="empty">No discussions found.</div>`}
+      </div></div>
+      <div class="panel"><div class="panel-h">Recent Updates${newCount?` <span class="pill" style="background:var(--cyan-2);color:#fff">${newCount} new</span>`:''}</div><div class="panel-b">
+        ${updates.length?updates.map(u=>`<button class="thread" onclick="openCreative('${u.id}')">
+          <div class="t">${updateIcon(u.kind)} ${esc(u.txt.slice(0,58))}${u.txt.length>58?"…":""}${u.when>=fresh?` <span class="pill" style="background:var(--cyan-2);color:#fff;font-size:10px">New</span>`:''}</div>
+          <div class="m"><b>${esc(u.smid)}</b> · ${u.when||'—'}</div></button>`).join(""):`<div class="empty">No recent updates.</div>`}
+      </div></div>
+    </div>`;
+}
+function filteredClient(){
+  let rows=clientCreatives();
+  if(S.sub==="recent")rows=rows.filter(c=>c.updated>=daysAgo(7));
+  const f=S.filter;
+  if(f.q){const q=f.q.toLowerCase();rows=rows.filter(c=>(c.smid+" "+carriersOf(c).map(o=>o.c).join(" ")+" "+c.benefit+" "+c.medium+" "+c.classification).toLowerCase().includes(q));}
+  if(f.status)rows=rows.filter(c=>statusFor(c,S.clientId)===f.status);
+  if(f.py)rows=rows.filter(c=>String(c.py)===f.py);
+  if(f.carrier)rows=rows.filter(c=>carriersOf(c).some(o=>o.c===f.carrier));
+  const {key,dir}=S.sort;rows.sort((a,b)=>{let x=a[key],y=b[key];if(x<y)return -dir;if(x>y)return dir;return 0;});
+  return rows;
+}
+function renderCreatives(){
+  const rows=filteredClient(),f=S.filter,total=clientCreatives().length;
+  const opt=(arr,sel)=>arr.map(v=>`<option ${sel===String(v)?"selected":""}>${v}</option>`).join("");
+  const th=(k,l)=>{const s=S.sort.key===k;return `<th class="sortable ${s?'sorted':''}" onclick="sortBy('${k}')">${l} <span class="arrow">${s?(S.sort.dir>0?'▲':'▼'):'↕'}</span></th>`;};
+  main().innerHTML=`
+    <div class="page-title">Creatives</div>
+    <div class="page-sub">${S.sub==="recent"?"Assets updated in the last 7 days":"All creative assets shared with your organization"}</div>
+    <div class="toolbar">
+      <div class="search"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+        <input id="fq" placeholder="Search SMID, carrier, benefit…" value="${esc(f.q)}" oninput="setFilter('q',this.value)"></div>
+      <select onchange="setFilter('status',this.value)"><option value="">All statuses</option>${opt(STATUSES,f.status)}</select>
+      <select onchange="setFilter('py',this.value)"><option value="">All plan years</option>${opt([2027,2026,2025],f.py)}</select>
+      <select onchange="setFilter('carrier',this.value)"><option value="">All carriers</option>${opt(CARRIERS,f.carrier)}</select>
+      <button class="btn btn-ghost btn-sm" onclick="resetFilter()">Reset</button>
+      <span class="updated"><span style="width:7px;height:7px;border-radius:50%;background:var(--green);display:inline-block"></span>Data last updated: Just now
+        <button class="btn btn-ghost btn-sm" onclick="renderCreatives();toast('Data refreshed')">↻ Refresh</button></span>
+    </div>
+    <div class="selbar none" id="selBar">
+      <span id="selCount">No creatives selected</span>
+      <button class="btn btn-cyan btn-sm" onclick="exportSelected('csv')">⬇ Export summary (.csv)</button>
+      <button class="btn btn-ghost btn-sm" onclick="exportSelected('docs')">⬇ Download documents</button>
+      <button class="btn btn-ghost btn-sm" onclick="clearSel()">Clear</button>
+      <span class="sp">Tick individual creatives, or use the header box to select all.</span>
+    </div>
+    <div class="table-wrap"><table>
+      <thead><tr><th class="chkcell"><input type="checkbox" id="selAll" title="Select all" onchange="toggleSelAll(this.checked)"></th>${th('smid','SMID')}${th('status','Status')}${th('py','Plan Year')}${th('annual','Annual Re-Submission')}${th('medium','Medium')}${th('classification','Classification')}<th>Carrier Opt-In</th><th>CMS Opt-In</th></tr></thead>
+      <tbody>${rows.length?rows.map(c=>`<tr class="clickable" onclick="openCreative('${c.id}')">
+        <td class="chkcell"><input type="checkbox" class="rowChk" data-id="${c.id}" ${S.sel.has(c.id)?'checked':''} onclick="event.stopPropagation()" onchange="toggleSel('${c.id}',this.checked)"></td>
+        <td class="smid">${esc(c.smid)}</td><td>${badge(statusFor(c,S.clientId))}</td><td>${c.py}</td><td>${yesNo(c.annual)}</td><td>${esc(c.medium)}</td><td>${esc(c.classification)}</td><td class="wrapcell">${carrierCell(c)}</td>
+        <td>${(c.optins||[]).some(o=>o.ok)?'<span class="optin"><span class="chk">✓</span></span>':'<span class="optin"><span class="chk no">–</span></span>'}</td></tr>`).join(""):`<tr><td colspan="9"><div class="empty">${total?'No creatives match your filters.':'No creatives have been shared with your organization yet.'}</div></td></tr>`}</tbody>
+    </table><div class="tablefoot"><span>Showing ${rows.length} of ${total} creatives</span><span>Sorted by ${S.sort.key} ${S.sort.dir>0?'ascending':'descending'}</span></div></div>`;
+  updateSelBar();
+  const fq=$("#fq");if(fq){fq.focus();fq.setSelectionRange(fq.value.length,fq.value.length);}
+}
+/* ---- Selection + export (partner Creatives) ---- */
+function toggleSel(id,on){on?S.sel.add(id):S.sel.delete(id);updateSelBar();}
+function toggleSelAll(on){
+  document.querySelectorAll('.rowChk').forEach(cb=>{cb.checked=on;on?S.sel.add(cb.dataset.id):S.sel.delete(cb.dataset.id);});
+  updateSelBar();
+}
+function clearSel(){S.sel.clear();document.querySelectorAll('.rowChk').forEach(cb=>cb.checked=false);const a=$("#selAll");if(a)a.checked=false;updateSelBar();}
+function updateSelBar(){
+  const bar=$("#selBar"),lab=$("#selCount");if(!bar||!lab)return;
+  const n=S.sel.size;
+  lab.textContent=n?`${n} creative${n>1?'s':''} selected`:"No creatives selected";
+  bar.classList.toggle("none",n===0);
+  const boxes=[...document.querySelectorAll('.rowChk')],a=$("#selAll");
+  if(a)a.checked=boxes.length>0&&boxes.every(cb=>cb.checked);
+}
+function csvEscape(v){v=(v==null?'':String(v));return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;}
+function downloadText(text,name,type){
+  const b=new Blob([text],{type:type+";charset=utf-8;"});const url=URL.createObjectURL(b);
+  const a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),1500);
+}
+function triggerDownload(href,name){const a=document.createElement('a');a.href=href;a.download=name;document.body.appendChild(a);a.click();a.remove();}
+function exportCsvFor(rows,label){
+  if(!rows.length){toast("Nothing to export");return;}
+  const isAdmin=S.role==='admin';
+  const head=["SMID","Status","Plan Year","Classification","Annual Re-Submission","Medium","Benefit Type","Carrier Opt-Ins","Distribution Area","Time Period","Election Period","Start Date","End Date","HPMS Filing Date","Media Type","Documents"];
+  if(isAdmin)head.push("Shared With");
+  const lines=[head.join(",")];
+  rows.forEach(c=>lines.push([
+    c.smid,statusFor(c,S.clientId),c.py,c.classification,c.annual?"Yes":"No",c.medium,c.benefit,
+    carriersOf(c).map(o=>o.c+(o.ok?` (opted in ${o.d||''})`:" (pending)")).join("; "),
+    c.dist,c.period,c.election,c.start,c.end,c.filing,c.mediaType,
+    (c.files||[]).map(f=>f.name).concat((c.optins||[]).filter(o=>o.file).map(o=>o.file.name)).join("; ")
+  ].concat(isAdmin?[(c.visibleTo||[]).map(id=>{const cc=clientById(id);return cc?cc.org:id;}).join("; ")]:[])
+   .map(csvEscape).join(",")));
+  downloadText(lines.join("\n"),`mha-creatives-${today()}.csv`,"text/csv");
+  logExport(label||"Summary (.csv)",rows.length);
+  toast(`Exported ${rows.length} creative${rows.length>1?'s':''} to CSV`);
+}
+function exportDocsFor(rows,label){
+  let n=0,delay=0;
+  rows.forEach(c=>{
+    (c.files||[]).forEach(f=>{if(f.dataUrl){const d=delay;setTimeout(()=>triggerDownload(f.dataUrl,f.name),d);delay+=400;n++;}});
+    (c.optins||[]).forEach(o=>{if(o.file&&o.file.dataUrl){const d=delay;setTimeout(()=>triggerDownload(o.file.dataUrl,o.file.name),d);delay+=400;n++;}});
+  });
+  if(!n){toast("No downloadable documents on the selected creatives");return;}
+  logExport(label||"Documents",rows.length);
+  toast(`Downloading ${n} document${n>1?'s':''}…`);
+}
+function exportSelected(kind){
+  const rows=[...S.sel].map(id=>creativeById(id)).filter(Boolean);
+  if(!rows.length){toast("Select at least one creative first");return;}
+  kind==='csv'?exportCsvFor(rows,"Summary (.csv)"):exportDocsFor(rows,"Documents");
+}
+function logExport(type,count){
+  const key='exports_'+(S.role==='admin'?'admin':S.clientId);
+  const log=DB.load(key,[]);
+  log.unshift({type,items:count,when:now()});
+  DB.save(key,log.slice(0,25));
+  if(S.view==='exports')renderExports();
+}
+function setFilter(k,v){S.filter[k]=v;renderCreatives();}
+function resetFilter(){S.filter={q:"",status:"",py:"",carrier:""};renderCreatives();}
+function sortBy(k){if(S.sort.key===k)S.sort.dir*=-1;else S.sort={key:k,dir:1};renderCreatives();}
+
+function openCreative(id){
+  const c=creativeById(id);if(!c)return;
+  if(!(c.visibleTo||[]).includes(S.clientId)){toast("You don't have access to that item");return;}
+  S.current=c;setActive('creatives');$("#crumbs").innerHTML=`Creatives / <b>${esc(c.smid)}</b>`;renderDetail(c);main().scrollTop=0;
+}
+/* Shared info cards — used by the partner detail view and the admin creative dashboard. */
+function infoCards(c){
+  const optRows=(c.optins||[]).length?c.optins.map((o,i)=>`<div class="optin-row">
+      <div class="optin"><span class="chk ${o.ok?'':'no'}">${o.ok?'✓':'–'}</span> ${esc(o.c)}<span style="color:var(--muted);margin-left:auto">${o.d||'pending'}</span></div>
+      ${o.file?`<a class="optin-file" href="#" onclick="downloadOptin('${c.id}',${i});return false;">${fileIcon(o.file.name)}${esc(o.file.name)}</a>`:`<span class="optin-file none">No confirmation attached</span>`}
+    </div>`).join(""):'<span style="color:var(--muted)">None recorded</span>';
+  const files=(c.files||[]);
+  return `<div class="detail-grid">
+      <div class="panel"><div class="card-h"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/></svg>Asset</div><div class="kv">
+        <div class="row"><div class="k">Plan Year</div><div class="v">${c.py}</div></div>
+        <div class="row"><div class="k">Classification</div><div class="v">${esc(c.classification)}</div></div>
+        <div class="row"><div class="k">Annual Re-Submission</div><div class="v">${yesNo(c.annual)}</div></div>
+        <div class="row"><div class="k">Medium</div><div class="v">${esc(c.medium)||'—'}</div></div>
+        <div class="row"><div class="k">Benefit Type</div><div class="v">${esc(c.benefit)}</div></div>
+        <div class="row"><div class="k">Carrier Opt-In</div><div class="v">${carrierCell(c)}</div></div>
+        <div class="row"><div class="k">Distribution Area</div><div class="v">${esc(c.dist)}</div></div></div></div>
+      <div class="panel"><div class="card-h"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 2v4M16 2v4M3 10h18"/><rect x="3" y="4" width="18" height="18" rx="2"/></svg>Dates</div><div class="kv">
+        <div class="row"><div class="k">Time Period</div><div class="v">${esc(c.period)||'—'}</div></div>
+        <div class="row"><div class="k">Election Period</div><div class="v">${esc(c.election)||'—'}</div></div>
+        <div class="row"><div class="k">Start Date</div><div class="v">${c.start||'—'}</div></div>
+        <div class="row"><div class="k">End Date</div><div class="v">${c.end||'—'}</div></div></div></div>
+      <div class="panel"><div class="card-h"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/></svg>HPMS</div><div class="kv">
+        <div class="row"><div class="k">Filing Date</div><div class="v">${c.filing||'—'}</div></div>
+        <div class="row"><div class="k">Media Type</div><div class="v">${esc(c.mediaType)||'—'}</div></div>
+        <div class="row"><div class="k">HPMS Opt-Ins</div><div class="v">${optRows}</div></div></div></div>
+      <div class="panel"><div class="card-h"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>Associated Files</div>
+        <div>${files.length?files.map((f,i)=>`<div class="file-row"><div class="fn">${fileIcon(f.name)}<a href="#" onclick="downloadFile('${c.id}',${i});return false;">${esc(f.name)}</a></div><div class="meta">${esc(f.cat)} · ${f.date}</div></div>`).join(""):'<div class="empty">No files attached.</div>'}</div></div>
+    </div>`;
+}
+function renderDetail(c){
+  main().innerHTML=`
+    <button class="back" onclick="nav('creatives')">← Back to Creatives</button>
+    <div class="detail-head"><div><h2>${esc(c.smid)}</h2><div class="sub">${esc(c.classification)} · Plan Year ${c.py}${c.annual?' · Annual Re-Submission':''}</div></div>
+      <div class="detail-actions">${badge(statusFor(c,S.clientId))}
+        <div class="status-menu"><button class="btn btn-cyan btn-sm" onclick="toggleStatusMenu(event)">Update Status ▾</button>
+          <div class="status-list hidden" id="statusList">${STATUSES.map(s=>`<button onclick="setClientStatus('${c.id}','${s}')">${badge(s)}</button>`).join("")}</div></div>
+        <button class="btn btn-ghost btn-sm" onclick="openHistory('${c.id}')">Status History</button></div></div>
+    <p style="color:var(--muted);font-size:12px;margin:-8px 0 16px">Status reflects your organization's internal compliance process and is visible only to your organization and My Health Angel.</p>
+    ${infoCards(c)}
+    <div class="panel"><div class="panel-h">Discussions / Communications with MHA
+      <button class="btn btn-primary btn-sm" onclick="openDiscussion('${c.id}')">Start Discussion</button></div>
+      <div class="disc" id="discList">${renderThread(getThread(c,S.clientId))}</div></div>
+    <p style="color:var(--muted);font-size:12px;margin-top:10px">This conversation is private between your organization and My Health Angel. No other partner can see it.</p>`;
+}
+/* Admin creative dashboard — entered by clicking a row in Creatives / Items. */
+function renderItemView(){
+  const c=creativeById(S.editId);
+  if(!c){nav('items');return;}
+  const cl=getClients();
+  const shared=(c.visibleTo||[]).map(id=>clientById(id)).filter(Boolean);
+  $("#crumbs").innerHTML=`Creatives / Items / <b>${esc(c.smid)}</b>`;
+  main().innerHTML=`
+    <button class="back" onclick="nav('items')">← Back to Items</button>
+    <div class="detail-head"><div><h2>${esc(c.smid)}</h2><div class="sub">${esc(c.classification)} · Plan Year ${c.py}${c.annual?' · Annual Re-Submission':''}</div></div>
+      <div class="detail-actions">${badge(c.status)}
+        <button class="btn btn-ghost btn-sm" onclick="openHistory('${c.id}')">Status History</button>
+        <button class="btn btn-cyan btn-sm" onclick="S.editId='${c.id}';nav('itemEditor')">✎ Edit item</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteItem('${c.id}')">Delete</button></div></div>
+    <p style="color:var(--muted);font-size:12px;margin:-8px 0 16px">This is the MHA status. Each partner also tracks their own status for their internal process.</p>
+    ${infoCards(c)}
+    <div class="panel" style="margin-bottom:18px"><div class="panel-h">Shared With &amp; Partner Status</div>
+      <div style="padding:6px 16px 14px">${shared.length?shared.map(cc=>`
+        <div class="file-row" style="padding-left:0;padding-right:0">
+          <div class="fn"><span class="avatar" style="width:26px;height:26px;font-size:10px;border-radius:7px">${initials(cc.org)}</span>
+            <div><b>${esc(cc.org)}</b><div style="font-size:11.5px;color:var(--muted);font-weight:500">${esc(cc.email)}${cc.active?'':' · inactive'}</div></div></div>
+          <div class="meta">${badge(statusFor(c,cc.id))}</div>
+        </div>`).join(""):`<div class="empty">Not shared with any partner yet — use Edit item to grant access.</div>`}</div></div>
+    <div class="panel" style="margin-bottom:18px"><div class="panel-h">Access &amp; Change History
+      <button class="btn btn-ghost btn-sm" onclick="nav('audit')">View full log</button></div>
+      <div style="padding:6px 16px 14px">${(()=>{const ev=getAudit().filter(e=>e.itemId===c.id).slice(0,12);
+        return ev.length?ev.map(e=>`<div class="file-row" style="padding-left:0;padding-right:0">
+          <div class="fn">${auditChip(e.kind)}<div><b>${esc(e.action)}</b>${e.detail?` <span style="font-weight:500;color:var(--muted)">${esc(e.detail)}</span>`:''}</div></div>
+          <div class="meta">${esc(e.at)}${e.backfilled?' · backfilled':''} · ${esc(e.actor)}</div></div>`).join("")
+        :`<div class="empty">No recorded activity for this item yet.</div>`;})()}</div></div>
+    <div class="panel"><div class="panel-h">Client Discussions</div>
+      <p style="padding:12px 18px 0;font-size:12.5px;color:var(--muted)">Each conversation is private between you and that partner.</p>
+      <div style="padding:12px 18px 18px">${shared.length?shared.map(cc=>`
+        <div class="panel" style="margin-bottom:12px"><div class="panel-h">${esc(cc.org)} <span style="font-weight:500;color:var(--muted);font-size:12px">${esc(cc.email)}</span></div>
+          <div class="disc" id="thr_${cc.id}">${renderThread(getThread(c,cc.id))}</div>
+          <div style="display:flex;gap:8px;padding:0 16px 14px"><input class="inp" id="ar_${cc.id}" placeholder="Reply to ${esc(cc.org)}…" onkeydown="if(event.key==='Enter')adminReply('${c.id}','${cc.id}')"><button class="btn btn-primary btn-sm" onclick="adminReply('${c.id}','${cc.id}')">Send</button></div></div>`).join(""):`<div class="empty">Share this item with a partner to start a private conversation.</div>`}</div></div>`;
+}
+function renderThread(msgs){
+  if(!msgs||!msgs.length)return `<div class="empty">There are no discussions yet.</div>`;
+  return msgs.map(d=>`<div class="disc-msg"><div class="av ${d.role==='admin'?'qv':'me'}">${initials(d.who)}</div><div class="body"><div class="who">${esc(d.who)}<span>${d.when}</span></div><div class="txt">${esc(d.txt)}</div></div></div>`).join("");
+}
+function downloadOptin(id,i){
+  const c=creativeById(id);const o=(c.optins||[])[i];const f=o&&o.file;
+  if(!f){toast("No confirmation attached for this carrier");return;}
+  if(f.dataUrl){const a=document.createElement('a');a.href=f.dataUrl;a.download=f.name;document.body.appendChild(a);a.click();a.remove();toast("Downloading "+f.name);}
+  else toast("Sample record — no file attached");
+}
+function downloadFile(id,i){
+  const c=creativeById(id);const f=(c.files||[])[i];if(!f)return;
+  if(f.dataUrl){const a=document.createElement('a');a.href=f.dataUrl;a.download=f.name;document.body.appendChild(a);a.click();a.remove();toast("Downloading "+f.name);}
+  else toast("Sample file — upload a real document from the admin side to enable download");
+}
+function toggleStatusMenu(e){e.stopPropagation();$("#statusList").classList.toggle("hidden");}
+document.addEventListener("click",()=>{const l=$("#statusList");if(l)l.classList.add("hidden");});
+/* Partner sets a status for their own organization only. Never affects other partners. */
+function setClientStatus(id,s){
+  const cid=S.clientId, c=creativeById(id), cur=statusFor(c,cid);
+  if(cur!==s){
+    if(!c.clientStatus)c.clientStatus={};
+    if(!c.clientHistory)c.clientHistory={};
+    if(!c.clientHistory[cid])c.clientHistory[cid]=[];
+    c.clientStatus[cid]=s;
+    c.clientHistory[cid].push({from:cur,to:s,by:clientById(cid).org,at:now()});
+    logAudit('status','Status changed',c.smid,cur+' → '+s+' (partner)',{itemId:c.id,clientId:cid});
+    c.updated=today();
+    updateCreative(c);
+  }
+  S.current=creativeById(id);renderDetail(S.current);toast("Status updated to “"+s+"”");
+}
+function modal(html){const o=document.createElement("div");o.className="overlay";o.innerHTML=`<div class="modal">${html}</div>`;o.addEventListener("click",e=>{if(e.target===o)o.remove();});document.body.appendChild(o);return o;}
+function confirmModal(title,msg,onYes){
+  const o=modal(`<div class="modal-h"><h3>${title}</h3><button class="x" onclick="this.closest('.overlay').remove()">×</button></div>
+    <div class="modal-b"><p style="font-size:13px;color:var(--slate)">${msg}</p></div>
+    <div class="modal-f"><button class="btn btn-ghost btn-sm" onclick="this.closest('.overlay').remove()">Cancel</button>
+      <button class="btn btn-danger btn-sm" id="cfyes">Delete</button></div>`);
+  o.querySelector('#cfyes').addEventListener('click',()=>{o.remove();onYes();});
+}
+function openHistory(id){
+  const c=creativeById(id);
+  let list=(c.history||[]).map(h=>Object.assign({},h,{mine:false}));
+  if(S.role==='client'){
+    const mine=(c.clientHistory&&c.clientHistory[S.clientId])||[];
+    list=list.concat(mine.map(h=>Object.assign({},h,{mine:true})));
+  }else if(c.clientHistory){
+    Object.keys(c.clientHistory).forEach(cid=>{
+      list=list.concat((c.clientHistory[cid]||[]).map(h=>Object.assign({},h,{mine:false})));
+    });
+  }
+  list.sort((a,b)=>String(a.at).localeCompare(String(b.at)));
+  const rows=list.length?list.map(h=>`<tr><td>${esc(h.from)}</td><td><b>${esc(h.to)}</b></td><td>${esc(h.by)}${h.mine?' <span class="pill" style="font-size:10px;padding:1px 7px">your organization</span>':''}</td><td>${h.at}</td></tr>`).join(""):`<tr><td colspan="4"><div class="empty">No status changes recorded.</div></td></tr>`;
+  modal(`<div class="modal-h"><h3>Status History</h3><button class="x" onclick="this.closest('.overlay').remove()">×</button></div><div class="modal-b" style="padding:6px 20px 20px"><table class="hist-table"><thead><tr><th>From</th><th>To</th><th>By</th><th>At</th></tr></thead><tbody>${rows}</tbody></table></div>`);
+}
+function openDiscussion(id){
+  modal(`<div class="modal-h"><h3>Start Discussion</h3><button class="x" onclick="this.closest('.overlay').remove()">×</button></div>
+    <div class="modal-b">
+      <div class="ff full" style="margin-bottom:12px"><label>Subject</label><input class="inp" id="dSub" placeholder="A note for MyHealthAngel"></div>
+      <div class="ff full" style="margin-bottom:12px"><label>Body</label><textarea class="inp" id="dBody" placeholder="Something I want to communicate…"></textarea></div>
+      <div class="ff full"><label>Files</label><input type="file" style="font-size:13px"></div></div>
+    <div class="modal-f"><button class="btn btn-ghost btn-sm" onclick="this.closest('.overlay').remove()">Cancel</button>
+      <button class="btn btn-primary btn-sm" onclick="submitDiscussion('${id}',this)">Submit Discussion</button></div>`);
+}
+function submitDiscussion(id,btn){
+  const c=creativeById(id);const body=$("#dBody").value.trim(),sub=$("#dSub").value.trim();
+  if(!body&&!sub){toast("Add a subject or message first");return;}
+  const cid=S.clientId;
+  if(!c.threads)c.threads={};if(!c.threads[cid])c.threads[cid]=[];
+  c.threads[cid].push({who:clientById(cid).org,role:'client',when:today(),txt:(sub?sub+" — ":"")+body});
+  updateCreative(c);btn.closest(".overlay").remove();
+  if(S.current&&S.current.id===id)$("#discList").innerHTML=renderThread(getThread(c,cid));
+  toast("Message sent to MHA");
+}
+function adminReply(id,cid){
+  const el=$("#ar_"+cid);const txt=el?el.value.trim():"";if(!txt){toast("Type a reply first");return;}
+  const c=creativeById(id);if(!c.threads)c.threads={};if(!c.threads[cid])c.threads[cid]=[];
+  c.threads[cid].push({who:ADMIN.name,role:'admin',when:today(),txt});
+  updateCreative(c);
+  const box=$("#thr_"+cid);if(box)box.innerHTML=renderThread(c.threads[cid]);
+  el.value="";toast("Reply sent to "+(clientById(cid)?clientById(cid).org:'client'));
+}
+
+/* ================= CLIENT: Exports ================= */
+function renderExports(){
+  const EX=DB.load('exports_'+S.clientId,[]);
+  const all=clientCreatives();
+  main().innerHTML=`
+    <div class="page-title">Exports</div>
+    <div class="page-sub">Export everything at once here, or select individual materials under <b>Creatives</b> to export just those.</div>
+    <div class="export-actions">
+      <div class="exp-card"><div class="ei"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></div><h4>Summary Report</h4><p>Spreadsheet of all ${all.length} creative(s) shared with you, with tracking &amp; submission info.</p><button class="btn btn-cyan btn-sm" onclick="exportCsvFor(clientCreatives(),'Summary (.csv) — all')">Export .csv</button></div>
+      <div class="exp-card"><div class="ei"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg></div><h4>All Documents</h4><p>Every attached document and carrier opt-in confirmation available to you.</p><button class="btn btn-cyan btn-sm" onclick="exportDocsFor(clientCreatives(),'Documents — all')">Download all</button></div>
+      <div class="exp-card"><div class="ei"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 11 3 3 8-8"/><path d="M20 12v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h9"/></svg></div><h4>Select Individually</h4><p>Choose specific materials with checkboxes and export only those.</p><button class="btn btn-ghost btn-sm" onclick="nav('creatives','all')">Go to Creatives</button></div>
+    </div>
+    <div class="panel"><div class="panel-h">Export History <button class="btn btn-ghost btn-sm" onclick="renderExports()">↻ Refresh</button></div>
+      <div class="table-wrap" style="border:none;box-shadow:none"><table><thead><tr><th>Type</th><th>Creatives</th><th>Exported</th></tr></thead>
+      <tbody>${EX.length?EX.map(e=>`<tr><td>${esc(e.type)}</td><td><span class="pill">${e.items}</span></td><td>${e.when}</td></tr>`).join(""):`<tr><td colspan="3"><div class="empty">No exports yet.</div></td></tr>`}</tbody></table></div></div>`;
+}
+
+/* start */
+prefillLogin();
+restore();
+</script>
+</body>
+</html>
