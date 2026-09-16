@@ -288,19 +288,10 @@
   var sort = { key:'updated_at', dir:-1 };
   var sel = {};                 // material id -> true, for the export selection bar
   var currentMaterialId = null; // id of the material shown in the detail view, or null
-  var activeTab = 'creatives';  // 'creatives' | 'submit' | 'allegation'
-
-  // ---- Material Submissions state ----
-  var mySubmissions = [];       // this org's own material_submissions, newest first
-  var resubmitParentId = null;  // set while resubmitting a new version of a past submission
-  var stagedFiles = [];         // File objects picked but not yet uploaded, for the open submission form
+  var activeTab = 'creatives';  // 'creatives' | 'allegation'
 
   var STATUSES = ['Submitted','In Review','Revisions Requested','Revisions Submitted','Approved','Approved For Use','Will Not Use'];
   var BADGE_CLASS = {'Approved':'b-approved','Approved For Use':'b-approved','In Review':'b-review','Submitted':'b-submitted','Will Not Use':'b-nouse','Revisions Requested':'b-review','Revisions Submitted':'b-submitted'};
-  var MATERIAL_TYPE_OPTIONS = ['Print','Digital/Banner','Social Media','Email','Direct Mail','Website','Video','Other'];
-  var LINE_OF_BUSINESS_OPTIONS = ['Medicare Advantage','Medicare Supplement','Final Expense'];
-  var SUBMISSION_BADGE_CLASS = {'Pending':'b-submitted','Approved':'b-approved','Rejected':'b-nouse','Needs Changes':'b-review'};
-  function submissionBadge(s){ return '<span class="badge ' + (SUBMISSION_BADGE_CLASS[s] || 'b-nouse') + '">' + escapeHtml(s) + '</span>'; }
 
   function hideAllAuthForms(){
     loginForm.classList.add('hidden');
@@ -367,11 +358,6 @@
     return result.data ? result.data.org_id : null;
   }
 
-  async function loadMySubmissions(){
-    var result = await sb.from('material_submissions').select('*').eq('org_id', myOrgId).order('created_at', {ascending:false});
-    mySubmissions = result.error ? [] : (result.data || []);
-    if(result.error) console.error('loadMySubmissions error:', result.error);
-  }
 
   var MATERIAL_SELECT = 'id,smid,status,plan_year,classification,is_annual_resubmission,medium,benefit_type,distribution_area,time_period,start_date,end_date,hpms_filing_date,media_type,geotargeting_grid_file_path,geotargeting_grid_file_name,updated_at,material_carrier_optins(id,carrier,opted_in,optin_date,confirmation_file_id)';
 
@@ -428,9 +414,7 @@
   }
 
   function renderMain(){
-    if(activeTab === 'submit'){
-      renderSubmitMaterial();
-    } else if(activeTab === 'allegation'){
+    if(activeTab === 'allegation'){
       renderAllegationRequest();
     } else {
       renderCreatives();
@@ -440,8 +424,7 @@
   function renderTabBar(){
     var html = '<div class="toptabs">'
       + '<button data-set-tab="creatives" class="' + (activeTab==='creatives'?'active':'') + '">Creatives</button>';
-    html += '<button data-set-tab="submit" class="' + (activeTab==='submit'?'active':'') + '">Submit Material</button>'
-      + '<button data-set-tab="allegation" class="' + (activeTab==='allegation'?'active':'') + '">Allegation/Audit Request</button>'
+    html += '<button data-set-tab="allegation" class="' + (activeTab==='allegation'?'active':'') + '">Allegation/Audit Request</button>'
       + '</div>';
     return html;
   }
@@ -449,7 +432,6 @@
     document.querySelectorAll('[data-set-tab]').forEach(function(el){
       el.addEventListener('click', function(){
         activeTab = el.getAttribute('data-set-tab');
-        if(activeTab === 'submit'){ resubmitParentId = null; stagedFiles = []; }
         renderMain();
       });
     });
@@ -491,211 +473,6 @@
     var set = {};
     materials.forEach(function(m){ if(m.plan_year) set[m.plan_year] = true; });
     return Object.keys(set).sort().reverse();
-  }
-
-  // =============================================================
-  // Material Submissions -- submit a marketing material to My Health Angel for
-  // compliance review, and track this org's own submission history.
-  // The insert (and file upload) is partner-initiated, direct via `sb`
-  // under this org's own authenticated session and RLS (org_id =
-  // current_org_id()) -- same pattern as postMessage()/setClientStatus()
-  // above, not routed through any admin Worker endpoint.
-  // =============================================================
-
-  function renderSubmitMaterial(){
-    var html = '';
-    html += renderTabBar();
-    html += '<div class="page-title">Submit Marketing Material</div>';
-    html += '<div class="page-sub">Submit a marketing material to My Health Angel for compliance review.</div>';
-
-    var parent = resubmitParentId ? mySubmissions.filter(function(s){ return s.id === resubmitParentId; })[0] : null;
-
-    html += '<div class="panel" style="margin-bottom:20px;">';
-    html += '<div class="card-h">' + (parent ? 'Resubmit New Version' : 'New Submission')
-      + (parent ? ' <button type="button" class="btn btn-ghost btn-sm" id="sm-cancel-resubmit" style="float:right;">Cancel</button>' : '')
-      + '</div>';
-    html += '<div style="padding:16px;">';
-
-    if(parent){
-      html += '<div style="background:var(--amber-bg);color:var(--amber);border-radius:10px;padding:10px 14px;margin-bottom:16px;font-size:13px;">'
-        + 'Resubmitting a new version of <strong>' + escapeHtml(parent.material_type) + '</strong> (previously <strong>' + escapeHtml(parent.status) + '</strong>'
-        + (parent.review_notes ? ': &ldquo;' + escapeHtml(parent.review_notes) + '&rdquo;' : '') + ')</div>';
-    }
-
-    html += '<div class="field"><label>Submitter Name</label><input class="inp" id="sm-name" placeholder="Your full name" /></div>';
-    html += '<div class="field"><label>Submitter Email</label><input class="inp" id="sm-email" type="email" value="' + escapeHtml(mySession ? mySession.user.email : '') + '" /></div>';
-    html += '<div class="field"><label>Submitter Phone</label><input class="inp" id="sm-phone" placeholder="Optional" /></div>';
-    html += '<div class="field"><label>Material Type</label><select class="inp" id="sm-type">'
-      + MATERIAL_TYPE_OPTIONS.map(function(t){ return '<option value="' + escapeHtml(t) + '">' + escapeHtml(t) + '</option>'; }).join('')
-      + '</select></div>';
-    html += '<div class="field"><label>Carrier / Product Tags</label><input class="inp" id="sm-carriers" placeholder="e.g. Cigna, Humana (comma-separated)" /></div>';
-    html += '<div class="field"><label>Line of Business</label><div>'
-      + LINE_OF_BUSINESS_OPTIONS.map(function(lob){
-          return '<label style="display:inline-flex;align-items:center;gap:5px;margin-right:16px;font-weight:500;font-size:13px;"><input type="checkbox" class="sm-lob" value="' + escapeHtml(lob) + '" /> ' + escapeHtml(lob) + '</label>';
-        }).join('')
-      + '</div></div>';
-
-    html += '<div class="field"><label>Files</label><input type="file" id="sm-files" multiple /><div id="sm-file-list" style="margin-top:8px;"></div></div>';
-
-    html += '<div class="field" style="margin-top:10px;"><label>Attestation</label>';
-    html += '<label style="display:flex;gap:8px;align-items:flex-start;font-size:13px;font-weight:500;margin-bottom:9px;"><input type="checkbox" id="att-guidelines" style="margin-top:3px;" /> I have reviewed the applicable My Health Angel compliance guidelines for this material.</label>';
-    html += '<label style="display:flex;gap:8px;align-items:flex-start;font-size:13px;font-weight:500;margin-bottom:9px;"><input type="checkbox" id="att-meets" style="margin-top:3px;" /> This material meets those requirements, or has been updated to meet them.</label>';
-    if(parent){
-      html += '<label style="display:flex;gap:8px;align-items:flex-start;font-size:13px;font-weight:500;margin-bottom:9px;"><input type="checkbox" id="att-changes" style="margin-top:3px;" /> All previously requested changes have been made.</label>';
-    }
-    html += '<label style="display:flex;gap:8px;align-items:flex-start;font-size:13px;font-weight:500;margin-bottom:9px;"><input type="checkbox" id="att-owns" style="margin-top:3px;" /> This creative is owned and operated by my organization; no third-party creative or traffic of any kind is included.</label>';
-    html += '</div>';
-
-    html += '<button type="button" class="btn btn-primary" id="sm-submit-btn" disabled>Submit for Review</button>';
-    html += '</div></div>';
-
-    html += '<div class="panel">';
-    html += '<div class="card-h">My Submissions</div>';
-    if(!mySubmissions.length){
-      html += '<div class="empty">No submissions yet.</div>';
-    } else {
-      html += '<table style="width:100%;border-collapse:collapse;"><thead><tr>'
-        + '<th style="text-align:left;padding:9px 16px;font-size:12px;color:var(--muted);border-bottom:1px solid var(--line);">Material Type</th>'
-        + '<th style="text-align:left;padding:9px 16px;font-size:12px;color:var(--muted);border-bottom:1px solid var(--line);">Version</th>'
-        + '<th style="text-align:left;padding:9px 16px;font-size:12px;color:var(--muted);border-bottom:1px solid var(--line);">Submitted</th>'
-        + '<th style="text-align:left;padding:9px 16px;font-size:12px;color:var(--muted);border-bottom:1px solid var(--line);">Status</th>'
-        + '<th style="padding:9px 16px;border-bottom:1px solid var(--line);"></th>'
-        + '</tr></thead><tbody>';
-      mySubmissions.forEach(function(s){
-        html += '<tr>'
-          + '<td style="padding:9px 16px;font-size:13px;border-bottom:1px solid var(--line);">' + escapeHtml(s.material_type) + '</td>'
-          + '<td style="padding:9px 16px;font-size:13px;border-bottom:1px solid var(--line);">v' + s.version + (s.parent_submission_id ? ' (resubmit)' : '') + '</td>'
-          + '<td style="padding:9px 16px;font-size:13px;border-bottom:1px solid var(--line);">' + String(s.created_at || '').slice(0,10) + '</td>'
-          + '<td style="padding:9px 16px;border-bottom:1px solid var(--line);">' + submissionBadge(s.status) + (s.review_notes ? '<div style="font-size:11.5px;color:var(--muted);margin-top:3px;">' + escapeHtml(s.review_notes) + '</div>' : '') + '</td>'
-          + '<td style="padding:9px 16px;border-bottom:1px solid var(--line);text-align:right;">'
-          + ((s.status === 'Rejected' || s.status === 'Needs Changes') ? '<button type="button" class="btn btn-ghost btn-sm" data-resubmit="' + escapeHtml(s.id) + '">Resubmit</button>' : '')
-          + '</td></tr>';
-      });
-      html += '</tbody></table>';
-    }
-    html += '</div>';
-
-    mainEl.innerHTML = html;
-    attachTabBarHandlers();
-    attachSubmitMaterialHandlers(parent);
-  }
-
-  function renderStagedFilesList(){
-    var el = document.getElementById('sm-file-list');
-    if(!el) return;
-    if(!stagedFiles.length){ el.innerHTML = ''; return; }
-    el.innerHTML = stagedFiles.map(function(f, idx){
-      return '<div class="file-row"><div class="fn">' + fileIcon() + '<span>' + escapeHtml(f.name) + '</span></div>'
-        + '<div class="meta"><button type="button" class="btn btn-ghost btn-sm" data-remove-staged="' + idx + '">Remove</button></div></div>';
-    }).join('');
-    el.querySelectorAll('[data-remove-staged]').forEach(function(btn){
-      btn.addEventListener('click', function(){
-        stagedFiles.splice(parseInt(btn.getAttribute('data-remove-staged'), 10), 1);
-        renderStagedFilesList();
-        validateSubmitForm(!!resubmitParentId);
-      });
-    });
-  }
-
-  function validateSubmitForm(requireChanges){
-    var submitBtn = document.getElementById('sm-submit-btn');
-    if(!submitBtn) return;
-    var name = document.getElementById('sm-name').value.trim();
-    var email = document.getElementById('sm-email').value.trim();
-    var type = document.getElementById('sm-type').value;
-    var attGuidelines = document.getElementById('att-guidelines').checked;
-    var attMeets = document.getElementById('att-meets').checked;
-    var attOwns = document.getElementById('att-owns').checked;
-    var attChangesEl = document.getElementById('att-changes');
-    var attChangesOk = requireChanges ? (attChangesEl && attChangesEl.checked) : true;
-    submitBtn.disabled = !(name && email && type && stagedFiles.length && attGuidelines && attMeets && attOwns && attChangesOk);
-  }
-
-  function attachSubmitMaterialHandlers(parent){
-    var cancelBtn = document.getElementById('sm-cancel-resubmit');
-    if(cancelBtn){ cancelBtn.addEventListener('click', function(){ resubmitParentId = null; stagedFiles = []; renderSubmitMaterial(); }); }
-
-    var fileInput = document.getElementById('sm-files');
-    if(fileInput){
-      fileInput.addEventListener('change', function(){
-        Array.prototype.forEach.call(fileInput.files, function(f){ stagedFiles.push(f); });
-        fileInput.value = '';
-        renderStagedFilesList();
-        validateSubmitForm(!!parent);
-      });
-    }
-    renderStagedFilesList();
-
-    ['sm-name','sm-email','sm-type','att-guidelines','att-meets','att-owns','att-changes'].forEach(function(id){
-      var el = document.getElementById(id);
-      if(el){ el.addEventListener(el.tagName === 'SELECT' || el.type === 'checkbox' ? 'change' : 'input', function(){ validateSubmitForm(!!parent); }); }
-    });
-
-    document.querySelectorAll('[data-resubmit]').forEach(function(btn){
-      btn.addEventListener('click', function(){
-        resubmitParentId = btn.getAttribute('data-resubmit');
-        stagedFiles = [];
-        renderSubmitMaterial();
-      });
-    });
-
-    var submitBtn = document.getElementById('sm-submit-btn');
-    if(submitBtn){ submitBtn.addEventListener('click', function(){ submitMaterialSubmission(parent); }); }
-  }
-
-  async function submitMaterialSubmission(parent){
-    var name = document.getElementById('sm-name').value.trim();
-    var email = document.getElementById('sm-email').value.trim();
-    var phone = document.getElementById('sm-phone').value.trim();
-    var type = document.getElementById('sm-type').value;
-    var carrierTags = document.getElementById('sm-carriers').value.split(',').map(function(s){ return s.trim(); }).filter(Boolean);
-    var lob = Array.prototype.slice.call(document.querySelectorAll('.sm-lob:checked')).map(function(el){ return el.value; });
-    var attGuidelines = document.getElementById('att-guidelines').checked;
-    var attMeets = document.getElementById('att-meets').checked;
-    var attChangesEl = document.getElementById('att-changes');
-    var attChanges = parent ? (attChangesEl && attChangesEl.checked) : null;
-    var attOwns = document.getElementById('att-owns').checked;
-
-    if(!name || !email || !type || !stagedFiles.length || !attGuidelines || !attMeets || !attOwns || (parent && !attChanges)){
-      toast('Please complete all required fields, at least one file, and all attestations.');
-      return;
-    }
-
-    var submitBtn = document.getElementById('sm-submit-btn');
-    submitBtn.disabled = true; submitBtn.textContent = 'Submitting...';
-
-    var insertResult = await sb.from('material_submissions').insert({
-      org_id: myOrgId, submitter_name: name, submitter_email: email, submitter_phone: phone || null,
-      material_type: type, carrier_tags: carrierTags, line_of_business: lob,
-      attestation_reviewed_guidelines: attGuidelines, attestation_meets_requirements: attMeets,
-      attestation_changes_made: attChanges, attestation_owns_creative: attOwns,
-      version: parent ? (parent.version + 1) : 1, parent_submission_id: parent ? parent.id : null
-    }).select().single();
-
-    if(insertResult.error){
-      toast('Could not submit: ' + insertResult.error.message);
-      submitBtn.disabled = false; submitBtn.textContent = 'Submit for Review';
-      return;
-    }
-
-    var submissionId = insertResult.data.id;
-    var uploadFailures = [];
-    for(var i = 0; i < stagedFiles.length; i++){
-      var f = stagedFiles[i];
-      var path = 'orgs/' + myOrgId + '/' + submissionId + '/' + Date.now() + '-' + f.name.replace(/[^A-Za-z0-9._-]/g, '_');
-      var upResult = await sb.storage.from(MATERIAL_SUBMISSION_FILES_BUCKET).upload(path, f);
-      if(upResult.error){ uploadFailures.push(f.name); continue; }
-      await sb.from('material_submission_files').insert({ submission_id: submissionId, file_path: path, file_name: f.name });
-    }
-
-    toast(uploadFailures.length
-      ? 'Submitted, but ' + uploadFailures.length + ' file(s) failed to upload: ' + uploadFailures.join(', ')
-      : 'Material submitted for compliance review.');
-
-    resubmitParentId = null;
-    stagedFiles = [];
-    await loadMySubmissions();
-    renderSubmitMaterial();
   }
 
   // =============================================================
@@ -1206,7 +983,6 @@
     mySession = session;
     myOrgId = await fetchMyOrgId(session.user.id);
     await loadMaterials();
-    await loadMySubmissions();
   }
 
   function showLogin(){
