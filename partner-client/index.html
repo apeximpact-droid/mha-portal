@@ -1,0 +1,1406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>My Health Angel Partner Portal</title>
+<link rel="icon" type="image/png" href="data:image/png;base64,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">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#3A3A3A;--navy-2:#6E6E6E;--navy-3:#1C1C1C;
+    --cyan:#E9C46A;--cyan-2:#C9A227;
+    --ink:#2E2E2E;--muted:#5a6b7b;--muted-2:#93a1b0;--slate:#5a6b7b;--slate-bg:#eaeef3;
+    --line:#e3e8ef;--bg-a:#f3f2ee;--bg-b:#ffffff;--card:#ffffff;
+    --red:#e0455a;--red-bg:#fbe5e9;
+    --green:#12a45a;--green-bg:#e2f6ec;--amber:#d1820a;--amber-bg:#fbf0d9;
+    --radius:14px;
+    --font-heading:'Montserrat',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    --font-body:'Open Sans',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --shadow:0 1px 2px rgba(58,58,58,.06),0 10px 30px rgba(58,58,58,.07);
+    --shadow-lg:0 30px 80px rgba(6,20,36,.45);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{font-family:var(--font-body);color:var(--ink);background:linear-gradient(165deg,var(--bg-a),var(--bg-b));font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+  button{font-family:inherit;cursor:pointer;border:none;background:none}
+  h1,h2,h3,.brand{font-family:var(--font-heading);font-weight:700}
+  .hidden{display:none !important}
+
+  #auth-screen{position:fixed;inset:0;padding:24px;display:flex;align-items:center;justify-content:center;
+    background:radial-gradient(900px 500px at 82% 18%,rgba(227,181,101,.16),rgba(227,181,101,0) 60%),radial-gradient(700px 500px at 12% 90%,rgba(201,147,46,.14),rgba(201,147,46,0) 60%),linear-gradient(135deg,var(--navy),var(--navy-3) 55%,var(--navy))}
+  .auth-card{position:relative;z-index:2;background:var(--card);width:100%;max-width:410px;border-radius:18px;padding:30px;box-shadow:var(--shadow-lg);border-top:4px solid #9B2924}
+  .auth-logo{display:block;max-width:240px;width:100%;height:auto;margin:0 auto 16px;}
+  .auth-card h1{font-size:19px;font-weight:800;text-align:center;margin-bottom:4px;color:var(--navy)}
+  .auth-card .tag{text-align:center;color:var(--muted);font-size:12.5px;margin-bottom:20px}
+  .field{margin-bottom:13px}
+  .field label{display:block;font-size:12px;font-weight:700;color:var(--navy);margin-bottom:5px}
+  .field input,.inp{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:10px;font-size:14px;background:#fbfcfe;transition:.15s;color:var(--ink);font-family:inherit}
+  .field input:focus,.inp:focus{outline:none;border-color:var(--cyan-2);box-shadow:0 0 0 3px rgba(201,147,46,.16);background:#fff}
+  textarea.inp{resize:vertical;min-height:100px}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:11px 16px;border-radius:10px;font-weight:700;font-size:14px;transition:.15s;white-space:nowrap}
+  .btn-primary{background:linear-gradient(135deg,var(--navy),var(--navy-2));color:#fff;box-shadow:0 6px 16px rgba(58,58,58,.25)}
+  .btn-primary:hover{filter:brightness(1.12)}
+  .btn-primary:disabled{opacity:.6;cursor:default}
+  .btn-cyan{background:linear-gradient(135deg,var(--cyan-2),var(--cyan));color:#2B2B2B}
+  .btn-cyan:hover{filter:brightness(1.05)}
+  .btn-ghost{background:#eef2f7;color:var(--ink)}.btn-ghost:hover{background:#e3e9f1}
+  .btn-danger{background:var(--red-bg);color:var(--red)}.btn-danger:hover{background:#f8d3da}
+  .btn-sm{padding:8px 12px;font-size:13px;border-radius:9px}
+  .btn[disabled]{opacity:.6;cursor:default}
+  #auth-screen .btn{width:100%}
+  .err{background:var(--red-bg);color:var(--red);border-radius:9px;padding:9px 11px;font-size:12.5px;margin-bottom:13px}
+  .switch-mode{text-align:center;margin-top:16px;font-size:12.5px;color:var(--muted)}
+  .switch-mode button{color:var(--cyan-2);font-weight:700;text-decoration:underline}
+
+  #app-screen{display:none;min-height:100vh}
+  #app-screen.show{display:block}
+  .topbar{background:var(--navy);color:#fff;padding:10px 24px;display:flex;align-items:center;justify-content:space-between}
+  .topbar .brand{font-weight:800;font-size:15px;display:flex;align-items:center;gap:12px}
+  .topbar .brand img{max-width:140px;width:100%;height:auto;display:block}
+  .topbar .who{display:flex;align-items:center;gap:14px;font-size:12.5px;color:#EAD9C8}
+  .topbar button{color:#EAD9C8;font-size:12.5px;font-weight:600;text-decoration:underline}
+  main{max-width:1040px;margin:0 auto;padding:28px 24px}
+  .page-title{font-size:23px;font-weight:800;letter-spacing:-.02em;margin-bottom:3px;color:var(--navy)}
+  .page-sub{color:var(--muted);margin-bottom:22px;font-size:13.5px}
+
+  .toptabs{display:flex;gap:4px;margin-bottom:22px;background:var(--bg-a);padding:5px;border-radius:12px;width:fit-content}
+  .toptabs button{font-size:12.5px;padding:8px 16px;border-radius:9px;font-weight:600;color:var(--muted)}
+  .toptabs button.active{background:#fff;color:var(--navy);box-shadow:var(--shadow),inset 0 -2px 0 #9B2924}
+
+  table{width:100%;border-collapse:collapse;background:var(--card);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow)}
+  th,td{text-align:left;padding:11px 14px;font-size:13px;border-bottom:1px solid var(--line)}
+  th{background:var(--bg-a);color:var(--navy);font-weight:700;font-size:11.5px;text-transform:uppercase;letter-spacing:.03em}
+  tr:last-child td{border-bottom:none}
+  tr.clickable{cursor:pointer}tr.clickable:hover{background:#f7fafc}
+  thead th.sortable{cursor:pointer}
+  thead th .arrow{opacity:.4;font-size:10px}
+  thead th.sorted{color:var(--navy)}thead th.sorted .arrow{opacity:1;color:var(--cyan-2)}
+  td.wrapcell{white-space:normal;line-height:1.9;max-width:260px}
+  td.chkcell,th.chkcell{width:40px;text-align:center;padding-left:14px;padding-right:0}
+  .chkcell input{width:16px;height:16px;accent-color:var(--cyan-2);cursor:pointer;vertical-align:middle}
+  .smid{font-weight:700;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12.5px;color:var(--navy)}
+  .tablefoot{padding:11px 14px;color:var(--muted);font-size:12px;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}
+
+  .badge{display:inline-block;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:600}
+  .b-approved{color:var(--green);background:var(--green-bg)}.b-review{color:var(--amber);background:var(--amber-bg)}
+  .b-submitted{color:var(--cyan-2);background:#F7ECD8}.b-nouse{color:var(--slate);background:var(--slate-bg)}
+  .pill{display:inline-flex;align-items:center;gap:5px;padding:2px 9px;border-radius:999px;font-size:11.5px;font-weight:700;background:#EFE2D3;color:var(--navy);margin:1px 0}
+  .pill.pend{background:var(--slate-bg);color:var(--muted);font-weight:600}
+
+  .toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:14px}
+  .toolbar input,.toolbar select{padding:9px 11px;border:1px solid var(--line);border-radius:9px;font-size:13px;background:#fff;color:var(--ink)}
+  .toolbar input:focus,.toolbar select:focus{outline:none;border-color:var(--cyan-2)}
+  .search{position:relative;min-width:230px;flex:1}.search input{width:100%;padding-left:33px}
+  .search svg{position:absolute;left:10px;top:50%;transform:translateY(-50%);opacity:.45}
+  .updated{font-size:12px;color:var(--muted);margin-left:auto;display:flex;align-items:center;gap:8px}
+  .selbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:#FAF1E2;border:1px solid #F0DDB8;border-radius:11px;padding:10px 14px;margin-bottom:12px;font-size:13px;font-weight:800;color:var(--navy)}
+  .selbar.none{background:#f5f8fb;border-color:var(--line);color:var(--muted);font-weight:600}
+  .selbar .sp{margin-left:auto;font-size:11.5px;font-weight:500;color:var(--muted)}
+  .empty{padding:26px 16px;text-align:center;color:var(--muted-2);font-size:13px}
+
+  .back{display:inline-flex;align-items:center;gap:6px;color:var(--muted);font-weight:600;font-size:13px;margin-bottom:14px}
+  .back:hover{color:var(--navy)}
+  .detail-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:6px;flex-wrap:wrap}
+  .detail-head h2{font-size:20px;font-weight:800;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--navy)}
+  .detail-head .sub{color:var(--muted);font-size:13px;margin-top:3px}
+  .detail-actions{display:flex;gap:9px;align-items:center;flex-wrap:wrap}
+  .detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:16px 0 18px}
+  @media(max-width:760px){.detail-grid{grid-template-columns:1fr}}
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+  .panel-h{padding:14px 16px;border-bottom:1px solid var(--line);font-weight:800;font-size:13.5px;display:flex;align-items:center;justify-content:space-between;color:var(--navy)}
+  .card-h{display:flex;align-items:center;gap:8px;padding:13px 16px;border-bottom:1px solid var(--line);font-weight:800;font-size:13.5px;color:var(--navy)}
+  .kv{padding:6px 16px 14px}
+  .kv .row{display:grid;grid-template-columns:150px 1fr;gap:10px;padding:8px 0;border-bottom:1px dashed #eef2f6;font-size:13px}
+  .kv .row:last-child{border-bottom:none}.kv .k{color:var(--muted);font-weight:600}.kv .v{font-weight:700;color:var(--ink)}
+  .optin-row{padding:7px 0;border-bottom:1px dashed #eef2f6}
+  .optin-row:last-child{border-bottom:none}
+  .optin{display:flex;align-items:center;gap:8px;padding:5px 0;font-size:13px}
+  .optin .chk{width:16px;height:16px;border-radius:5px;background:var(--green);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:11px;flex:none}
+  .optin .chk.no{background:#cbd3dd}
+  .optin-file{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;margin-top:3px;margin-left:24px;color:var(--cyan-2)}
+  .optin-file.none{color:var(--muted-2);font-weight:500;font-style:italic}
+  .file-row{display:flex;align-items:center;justify-content:space-between;padding:11px 16px;border-bottom:1px solid var(--line)}
+  .file-row:last-child{border-bottom:none}
+  .file-row .fn{display:flex;align-items:center;gap:9px;font-weight:600;font-size:13px;min-width:0}
+  .file-row .fn a{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--cyan-2)}
+  .file-row .meta{font-size:12px;color:var(--muted);white-space:nowrap;margin-left:10px}
+  .disc{padding:8px 16px 16px}
+  .disc-msg{display:flex;gap:10px;padding:11px 0;border-bottom:1px dashed #eef2f6}.disc-msg:last-child{border-bottom:none}
+  .disc-msg .av{width:29px;height:29px;border-radius:9px;flex:none;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:11px;color:#fff}
+  .av.qv{background:linear-gradient(135deg,var(--navy),var(--navy-2))}.av.me{background:linear-gradient(135deg,var(--cyan-2),var(--cyan));color:#2B2B2B}
+  .disc-msg .body .who{font-weight:700;font-size:12.5px}.disc-msg .body .who span{color:var(--muted);font-weight:500;margin-left:7px;font-size:11px}
+  .disc-msg .body .txt{font-size:13px;margin-top:2px;color:var(--slate);white-space:pre-wrap}
+  .disc-compose{display:flex;gap:8px;padding:0 16px 14px}
+  .status-menu{position:relative}
+  .status-list{position:absolute;right:0;top:calc(100% + 6px);background:#fff;border:1px solid var(--line);border-radius:11px;box-shadow:var(--shadow);width:196px;overflow:hidden;z-index:30}
+  .status-list button{display:flex;align-items:center;gap:8px;width:100%;text-align:left;padding:10px 13px;font-size:13px;font-weight:500}
+  .status-list button:hover{background:#f3f7fb}
+
+  .overlay{position:fixed;inset:0;background:rgba(6,20,36,.55);display:flex;align-items:center;justify-content:center;padding:22px;z-index:100;backdrop-filter:blur(2px)}
+  .modal{background:#fff;border-radius:16px;width:100%;max-width:520px;box-shadow:var(--shadow-lg);max-height:88vh;overflow:auto}
+  .modal-h{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--line)}
+  .modal-h h3{font-size:16px;font-weight:800;color:var(--navy)}
+  .modal-h .x{width:30px;height:30px;border-radius:9px;color:var(--muted);font-size:18px;display:flex;align-items:center;justify-content:center}.modal-h .x:hover{background:#f1f4f8;color:var(--ink)}
+  .modal-b{padding:18px 20px}
+  .modal-f{padding:14px 20px;border-top:1px solid var(--line);display:flex;justify-content:flex-end;gap:10px}
+  .hist-table{width:100%;border-collapse:collapse;font-size:13px}
+  .hist-table th{text-align:left;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.04em;padding:8px 10px;border-bottom:1px solid var(--line)}
+  .hist-table td{padding:9px 10px;border-bottom:1px solid #eef2f6}
+
+  .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--navy);color:#fff;padding:11px 18px;border-radius:11px;font-size:13px;font-weight:600;box-shadow:0 12px 30px rgba(0,0,0,.3);opacity:0;transition:.25s;z-index:200;pointer-events:none}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+
+<div id="auth-screen">
+  <div class="auth-card">
+    <img class="auth-logo" src="mha-logo.png" alt="My Health Angel" onerror="this.style.display='none'" />
+    <h1 id="auth-title">My Health Angel Partner Portal</h1>
+    <p class="tag" id="auth-tag">Sign in to view your materials</p>
+    <div id="auth-error" class="err hidden"></div>
+
+    <div id="login-form">
+      <div class="field">
+        <label for="login-email">Email</label>
+        <input type="email" id="login-email" autocomplete="email" />
+      </div>
+      <div class="field">
+        <label for="login-password">Password</label>
+        <input type="password" id="login-password" autocomplete="current-password" />
+      </div>
+      <button class="btn btn-primary" id="login-btn">Sign in</button>
+      <p class="switch-mode"><button id="show-forgot-btn" type="button">Forgot Password?</button></p>
+    </div>
+
+    <div id="forgot-form" class="hidden">
+      <p style="font-size:12.5px;color:var(--muted);margin-bottom:14px;">Enter your email and we'll send you a link to reset your password.</p>
+      <div class="field">
+        <label for="forgot-email">Email</label>
+        <input type="email" id="forgot-email" autocomplete="email" />
+      </div>
+      <button class="btn btn-primary" id="forgot-btn">Send reset link</button>
+      <p class="switch-mode"><button id="back-to-login-btn" type="button">Back to sign in</button></p>
+    </div>
+
+    <div id="forgot-sent" class="hidden">
+      <p style="font-size:13px;color:var(--muted);text-align:center;padding:10px 0 4px;">Check your email for a link to reset your password.</p>
+      <p class="switch-mode"><button id="back-to-login-btn2" type="button">Back to sign in</button></p>
+    </div>
+
+    <div id="setpw-form" class="hidden">
+      <p style="font-size:12.5px;color:var(--muted);margin-bottom:14px;">You've been invited to the My Health Angel Partner Portal. Set a password to finish setting up your account.</p>
+      <div class="field">
+        <label for="setpw-password">New password</label>
+        <input type="password" id="setpw-password" autocomplete="new-password" />
+      </div>
+      <div class="field">
+        <label for="setpw-confirm">Confirm password</label>
+        <input type="password" id="setpw-confirm" autocomplete="new-password" />
+      </div>
+      <button class="btn btn-primary" id="setpw-btn">Set password and continue</button>
+    </div>
+
+    <div id="mfa-enroll-form" class="hidden">
+      <p style="font-size:12.5px;color:var(--muted);margin-bottom:14px;">Two-factor authentication is required for every account. Scan this code with an authenticator app (Google Authenticator, Authy, 1Password, etc.), then enter the 6-digit code it shows.</p>
+      <div id="mfa-qr-container" style="text-align:center;margin-bottom:16px;"></div>
+      <div class="field">
+        <label for="mfa-enroll-code">Authentication code</label>
+        <input type="text" id="mfa-enroll-code" inputmode="numeric" autocomplete="one-time-code" maxlength="6" style="text-align:center;letter-spacing:.3em;font-size:18px;" />
+      </div>
+      <button class="btn btn-primary" id="mfa-enroll-verify-btn">Verify and continue</button>
+    </div>
+
+    <div id="mfa-challenge-form" class="hidden">
+      <p style="font-size:12.5px;color:var(--muted);margin-bottom:14px;">Enter the 6-digit code from your authenticator app.</p>
+      <div class="field">
+        <label for="mfa-challenge-code">Authentication code</label>
+        <input type="text" id="mfa-challenge-code" inputmode="numeric" autocomplete="one-time-code" maxlength="6" style="text-align:center;letter-spacing:.3em;font-size:18px;" />
+      </div>
+      <button class="btn btn-primary" id="mfa-challenge-verify-btn">Verify</button>
+    </div>
+  </div>
+</div>
+
+<div id="app-screen">
+  <div class="topbar">
+    <div class="brand">
+      <img src="mha-logo.png" alt="My Health Angel" onerror="this.style.display='none'" />
+      <span>My Health Angel Partner Portal</span>
+    </div>
+    <div class="who">
+      <span id="who-email"></span>
+      <button id="logout-btn">Sign out</button>
+    </div>
+  </div>
+  <main id="main">
+    <div class="empty">Loading...</div>
+  </main>
+</div>
+
+<div class="toast" id="toast"><span class="d"></span><span id="toastMsg"></span></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+(function(){
+  // Public by design -- protected by Row Level Security, not secrecy. Never
+  // put the service_role key here; that one stays server-side only.
+  var SUPABASE_URL = 'REPLACE_WITH_YOUR_SUPABASE_PROJECT_URL';
+  var SUPABASE_ANON_KEY = 'REPLACE_WITH_YOUR_SUPABASE_ANON_KEY';
+  // Supabase Storage bucket that material_files.storage_path / confirmation
+  // files live in. Must be created (private bucket) on the admin/upload side
+  // before real downloads work -- until then this degrades to a toast error.
+  var FILES_BUCKET = 'material-files';
+  // Marketing material files a partner org submits for compliance review.
+  // The only partner-writable bucket in this app -- every other bucket is
+  // download-only for partners. Path convention: orgs/{org_id}/{submission_id}/{filename}.
+  var MATERIAL_SUBMISSION_FILES_BUCKET = 'material-submission-files';
+
+  var sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  var authScreen = document.getElementById('auth-screen');
+  var appScreen = document.getElementById('app-screen');
+  var loginForm = document.getElementById('login-form');
+  var forgotForm = document.getElementById('forgot-form');
+  var forgotSent = document.getElementById('forgot-sent');
+  var setpwForm = document.getElementById('setpw-form');
+  var mfaEnrollForm = document.getElementById('mfa-enroll-form');
+  var mfaChallengeForm = document.getElementById('mfa-challenge-form');
+  var authError = document.getElementById('auth-error');
+  var authTag = document.getElementById('auth-tag');
+  var mainEl = document.getElementById('main');
+
+  // Set during MFA enrollment/challenge, consumed by the matching verify button.
+  var pendingFactorId = null;
+  var pendingChallengeId = null;
+
+  // ---- Partner app state (populated after login) ----
+  var mySession = null;
+  var myOrgId = null;
+  var materials = [];           // raw rows from `materials`, each with ._optins attached
+  var filesByMaterial = {};     // material_id -> [material_files row, ...]
+  var fileById = {};            // file id -> material_files row (for opt-in confirmation lookups)
+  var myStatusByMaterial = {};  // material_id -> this org's material_org_status.status
+  var filter = { q:'', status:'', py:'', carrier:'' };
+  var sort = { key:'updated_at', dir:-1 };
+  var sel = {};                 // material id -> true, for the export selection bar
+  var currentMaterialId = null; // id of the material shown in the detail view, or null
+  var activeTab = 'creatives';  // 'creatives' | 'submit' | 'allegation'
+
+  // ---- Material Submissions state ----
+  var mySubmissions = [];       // this org's own material_submissions, newest first
+  var resubmitParentId = null;  // set while resubmitting a new version of a past submission
+  var stagedFiles = [];         // File objects picked but not yet uploaded, for the open submission form
+
+  var STATUSES = ['Submitted','In Review','Revisions Requested','Revisions Submitted','Approved','Approved For Use','Will Not Use'];
+  var BADGE_CLASS = {'Approved':'b-approved','Approved For Use':'b-approved','In Review':'b-review','Submitted':'b-submitted','Will Not Use':'b-nouse','Revisions Requested':'b-review','Revisions Submitted':'b-submitted'};
+  var MATERIAL_TYPE_OPTIONS = ['Print','Digital/Banner','Social Media','Email','Direct Mail','Website','Video','Other'];
+  var LINE_OF_BUSINESS_OPTIONS = ['Medicare Advantage','Medicare Supplement','Final Expense'];
+  var SUBMISSION_BADGE_CLASS = {'Pending':'b-submitted','Approved':'b-approved','Rejected':'b-nouse','Needs Changes':'b-review'};
+  function submissionBadge(s){ return '<span class="badge ' + (SUBMISSION_BADGE_CLASS[s] || 'b-nouse') + '">' + escapeHtml(s) + '</span>'; }
+
+  function hideAllAuthForms(){
+    loginForm.classList.add('hidden');
+    forgotForm.classList.add('hidden');
+    forgotSent.classList.add('hidden');
+    setpwForm.classList.add('hidden');
+    mfaEnrollForm.classList.add('hidden');
+    mfaChallengeForm.classList.add('hidden');
+  }
+
+  function showError(msg){
+    authError.textContent = msg;
+    authError.classList.remove('hidden');
+  }
+  function clearError(){
+    authError.classList.add('hidden');
+    authError.textContent = '';
+  }
+
+  function escapeHtml(s){
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+    });
+  }
+  function badge(s){ return '<span class="badge ' + (BADGE_CLASS[s] || 'b-nouse') + '">' + escapeHtml(s) + '</span>'; }
+  function yesNo(v){ return v ? '<span class="pill" style="background:var(--green-bg);color:var(--green)">Yes</span>' : '<span class="pill pend">No</span>'; }
+  function fileIcon(){ return '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--cyan-2);flex:none"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>'; }
+  var toastTimer = null;
+  function toast(msg){
+    var t = document.getElementById('toast');
+    document.getElementById('toastMsg').textContent = msg;
+    t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function(){ t.classList.remove('show'); }, 2600);
+  }
+  function modal(html){
+    var o = document.createElement('div');
+    o.className = 'overlay';
+    o.innerHTML = '<div class="modal">' + html + '</div>';
+    o.addEventListener('click', function(e){ if(e.target === o) o.remove(); });
+    document.body.appendChild(o);
+    return o;
+  }
+
+  function statusFor(m){ return myStatusByMaterial[m.id] || m.status; }
+  function carriersOf(m){ return (m._optins || []).filter(function(o){ return o.carrier && String(o.carrier).trim(); }); }
+  function carrierCell(m){
+    var list = carriersOf(m);
+    if(!list.length) return '<span style="color:var(--muted)">—</span>';
+    return list.map(function(o){
+      return o.opted_in
+        ? '<span class="pill">' + escapeHtml(o.carrier) + '</span>'
+        : '<span class="pill pend">' + escapeHtml(o.carrier) + ' (pending)</span>';
+    }).join(' ');
+  }
+
+  // =============================================================
+  // Data loading
+  // =============================================================
+
+  async function fetchMyOrgId(userId){
+    var result = await sb.from('users').select('org_id').eq('id', userId).single();
+    if(result.error){ console.error('fetchMyOrgId error:', result.error); return null; }
+    return result.data ? result.data.org_id : null;
+  }
+
+  async function loadMySubmissions(){
+    var result = await sb.from('material_submissions').select('*').eq('org_id', myOrgId).order('created_at', {ascending:false});
+    mySubmissions = result.error ? [] : (result.data || []);
+    if(result.error) console.error('loadMySubmissions error:', result.error);
+  }
+
+  var MATERIAL_SELECT = 'id,smid,status,plan_year,classification,is_annual_resubmission,medium,benefit_type,distribution_area,time_period,start_date,end_date,hpms_filing_date,media_type,geotargeting_grid_file_path,geotargeting_grid_file_name,updated_at,material_carrier_optins(id,carrier,opted_in,optin_date,confirmation_file_id)';
+
+  async function loadMaterials(){
+    mainEl.innerHTML = '<div class="empty">Loading...</div>';
+
+    // Explicitly scoped to shares with our own org.
+    var shareResult = await sb.from('material_shares').select('material_id').eq('org_id', myOrgId);
+    if(shareResult.error){
+      mainEl.innerHTML = '<div class="empty">Could not load materials: ' + escapeHtml(shareResult.error.message) + '</div>';
+      return;
+    }
+    var myMaterialIds = (shareResult.data || []).map(function(r){ return r.material_id; });
+    if(!myMaterialIds.length){
+      materials = [];
+      filesByMaterial = {}; fileById = {}; myStatusByMaterial = {};
+      renderMain();
+      return;
+    }
+
+    var matResult = await sb.from('materials').select(MATERIAL_SELECT).in('id', myMaterialIds).order('updated_at', { ascending: false });
+    if(matResult.error){
+      mainEl.innerHTML = '<div class="empty">Could not load materials: ' + escapeHtml(matResult.error.message) + '</div>';
+      return;
+    }
+    materials = (matResult.data || []).map(function(m){
+      m._optins = m.material_carrier_optins || [];
+      return m;
+    });
+
+    var ids = materials.map(function(m){ return m.id; });
+
+    myStatusByMaterial = {};
+    if(ids.length){
+      var statusResult = await sb.from('material_org_status').select('material_id,status').in('material_id', ids);
+      if(!statusResult.error){
+        (statusResult.data || []).forEach(function(r){ myStatusByMaterial[r.material_id] = r.status; });
+      }
+    }
+
+    filesByMaterial = {}; fileById = {};
+    if(ids.length){
+      var filesResult = await sb.from('material_files').select('id,material_id,file_name,category,storage_path,uploaded_at').in('material_id', ids).order('uploaded_at');
+      if(!filesResult.error){
+        (filesResult.data || []).forEach(function(f){
+          fileById[f.id] = f;
+          if(!filesByMaterial[f.material_id]) filesByMaterial[f.material_id] = [];
+          filesByMaterial[f.material_id].push(f);
+        });
+      }
+    }
+
+    renderMain();
+  }
+
+  function renderMain(){
+    if(activeTab === 'submit'){
+      renderSubmitMaterial();
+    } else if(activeTab === 'allegation'){
+      renderAllegationRequest();
+    } else {
+      renderCreatives();
+    }
+  }
+
+  function renderTabBar(){
+    var html = '<div class="toptabs">'
+      + '<button data-set-tab="creatives" class="' + (activeTab==='creatives'?'active':'') + '">Creatives</button>';
+    html += '<button data-set-tab="submit" class="' + (activeTab==='submit'?'active':'') + '">Submit Material</button>'
+      + '<button data-set-tab="allegation" class="' + (activeTab==='allegation'?'active':'') + '">Allegation/Audit Request</button>'
+      + '</div>';
+    return html;
+  }
+  function attachTabBarHandlers(){
+    document.querySelectorAll('[data-set-tab]').forEach(function(el){
+      el.addEventListener('click', function(){
+        activeTab = el.getAttribute('data-set-tab');
+        if(activeTab === 'submit'){ resubmitParentId = null; stagedFiles = []; }
+        renderMain();
+      });
+    });
+  }
+
+  // =============================================================
+  // Creatives list
+  // =============================================================
+
+  function filteredRows(){
+    var rows = materials.slice();
+    if(filter.q){
+      var q = filter.q.toLowerCase();
+      rows = rows.filter(function(m){
+        var hay = (m.smid + ' ' + carriersOf(m).map(function(o){ return o.carrier; }).join(' ') + ' ' + (m.benefit_type||'') + ' ' + (m.medium||'') + ' ' + (m.classification||'')).toLowerCase();
+        return hay.indexOf(q) !== -1;
+      });
+    }
+    if(filter.status) rows = rows.filter(function(m){ return statusFor(m) === filter.status; });
+    if(filter.py) rows = rows.filter(function(m){ return String(m.plan_year) === filter.py; });
+    if(filter.carrier) rows = rows.filter(function(m){ return carriersOf(m).some(function(o){ return o.carrier === filter.carrier; }); });
+    rows.sort(function(a,b){
+      var x = a[sort.key], y = b[sort.key];
+      if(x == null) x = '';
+      if(y == null) y = '';
+      if(x < y) return -sort.dir;
+      if(x > y) return sort.dir;
+      return 0;
+    });
+    return rows;
+  }
+
+  function allCarriers(){
+    var set = {};
+    materials.forEach(function(m){ carriersOf(m).forEach(function(o){ set[o.carrier] = true; }); });
+    return Object.keys(set).sort();
+  }
+  function allPlanYears(){
+    var set = {};
+    materials.forEach(function(m){ if(m.plan_year) set[m.plan_year] = true; });
+    return Object.keys(set).sort().reverse();
+  }
+
+  // =============================================================
+  // Material Submissions -- submit a marketing material to My Health Angel for
+  // compliance review, and track this org's own submission history.
+  // The insert (and file upload) is partner-initiated, direct via `sb`
+  // under this org's own authenticated session and RLS (org_id =
+  // current_org_id()) -- same pattern as postMessage()/setClientStatus()
+  // above, not routed through any admin Worker endpoint.
+  // =============================================================
+
+  function renderSubmitMaterial(){
+    var html = '';
+    html += renderTabBar();
+    html += '<div class="page-title">Submit Marketing Material</div>';
+    html += '<div class="page-sub">Submit a marketing material to My Health Angel for compliance review.</div>';
+
+    var parent = resubmitParentId ? mySubmissions.filter(function(s){ return s.id === resubmitParentId; })[0] : null;
+
+    html += '<div class="panel" style="margin-bottom:20px;">';
+    html += '<div class="card-h">' + (parent ? 'Resubmit New Version' : 'New Submission')
+      + (parent ? ' <button type="button" class="btn btn-ghost btn-sm" id="sm-cancel-resubmit" style="float:right;">Cancel</button>' : '')
+      + '</div>';
+    html += '<div style="padding:16px;">';
+
+    if(parent){
+      html += '<div style="background:var(--amber-bg);color:var(--amber);border-radius:10px;padding:10px 14px;margin-bottom:16px;font-size:13px;">'
+        + 'Resubmitting a new version of <strong>' + escapeHtml(parent.material_type) + '</strong> (previously <strong>' + escapeHtml(parent.status) + '</strong>'
+        + (parent.review_notes ? ': &ldquo;' + escapeHtml(parent.review_notes) + '&rdquo;' : '') + ')</div>';
+    }
+
+    html += '<div class="field"><label>Submitter Name</label><input class="inp" id="sm-name" placeholder="Your full name" /></div>';
+    html += '<div class="field"><label>Submitter Email</label><input class="inp" id="sm-email" type="email" value="' + escapeHtml(mySession ? mySession.user.email : '') + '" /></div>';
+    html += '<div class="field"><label>Submitter Phone</label><input class="inp" id="sm-phone" placeholder="Optional" /></div>';
+    html += '<div class="field"><label>Material Type</label><select class="inp" id="sm-type">'
+      + MATERIAL_TYPE_OPTIONS.map(function(t){ return '<option value="' + escapeHtml(t) + '">' + escapeHtml(t) + '</option>'; }).join('')
+      + '</select></div>';
+    html += '<div class="field"><label>Carrier / Product Tags</label><input class="inp" id="sm-carriers" placeholder="e.g. Cigna, Humana (comma-separated)" /></div>';
+    html += '<div class="field"><label>Line of Business</label><div>'
+      + LINE_OF_BUSINESS_OPTIONS.map(function(lob){
+          return '<label style="display:inline-flex;align-items:center;gap:5px;margin-right:16px;font-weight:500;font-size:13px;"><input type="checkbox" class="sm-lob" value="' + escapeHtml(lob) + '" /> ' + escapeHtml(lob) + '</label>';
+        }).join('')
+      + '</div></div>';
+
+    html += '<div class="field"><label>Files</label><input type="file" id="sm-files" multiple /><div id="sm-file-list" style="margin-top:8px;"></div></div>';
+
+    html += '<div class="field" style="margin-top:10px;"><label>Attestation</label>';
+    html += '<label style="display:flex;gap:8px;align-items:flex-start;font-size:13px;font-weight:500;margin-bottom:9px;"><input type="checkbox" id="att-guidelines" style="margin-top:3px;" /> I have reviewed the applicable My Health Angel compliance guidelines for this material.</label>';
+    html += '<label style="display:flex;gap:8px;align-items:flex-start;font-size:13px;font-weight:500;margin-bottom:9px;"><input type="checkbox" id="att-meets" style="margin-top:3px;" /> This material meets those requirements, or has been updated to meet them.</label>';
+    if(parent){
+      html += '<label style="display:flex;gap:8px;align-items:flex-start;font-size:13px;font-weight:500;margin-bottom:9px;"><input type="checkbox" id="att-changes" style="margin-top:3px;" /> All previously requested changes have been made.</label>';
+    }
+    html += '<label style="display:flex;gap:8px;align-items:flex-start;font-size:13px;font-weight:500;margin-bottom:9px;"><input type="checkbox" id="att-owns" style="margin-top:3px;" /> This creative is owned and operated by my organization; no third-party creative or traffic of any kind is included.</label>';
+    html += '</div>';
+
+    html += '<button type="button" class="btn btn-primary" id="sm-submit-btn" disabled>Submit for Review</button>';
+    html += '</div></div>';
+
+    html += '<div class="panel">';
+    html += '<div class="card-h">My Submissions</div>';
+    if(!mySubmissions.length){
+      html += '<div class="empty">No submissions yet.</div>';
+    } else {
+      html += '<table style="width:100%;border-collapse:collapse;"><thead><tr>'
+        + '<th style="text-align:left;padding:9px 16px;font-size:12px;color:var(--muted);border-bottom:1px solid var(--line);">Material Type</th>'
+        + '<th style="text-align:left;padding:9px 16px;font-size:12px;color:var(--muted);border-bottom:1px solid var(--line);">Version</th>'
+        + '<th style="text-align:left;padding:9px 16px;font-size:12px;color:var(--muted);border-bottom:1px solid var(--line);">Submitted</th>'
+        + '<th style="text-align:left;padding:9px 16px;font-size:12px;color:var(--muted);border-bottom:1px solid var(--line);">Status</th>'
+        + '<th style="padding:9px 16px;border-bottom:1px solid var(--line);"></th>'
+        + '</tr></thead><tbody>';
+      mySubmissions.forEach(function(s){
+        html += '<tr>'
+          + '<td style="padding:9px 16px;font-size:13px;border-bottom:1px solid var(--line);">' + escapeHtml(s.material_type) + '</td>'
+          + '<td style="padding:9px 16px;font-size:13px;border-bottom:1px solid var(--line);">v' + s.version + (s.parent_submission_id ? ' (resubmit)' : '') + '</td>'
+          + '<td style="padding:9px 16px;font-size:13px;border-bottom:1px solid var(--line);">' + String(s.created_at || '').slice(0,10) + '</td>'
+          + '<td style="padding:9px 16px;border-bottom:1px solid var(--line);">' + submissionBadge(s.status) + (s.review_notes ? '<div style="font-size:11.5px;color:var(--muted);margin-top:3px;">' + escapeHtml(s.review_notes) + '</div>' : '') + '</td>'
+          + '<td style="padding:9px 16px;border-bottom:1px solid var(--line);text-align:right;">'
+          + ((s.status === 'Rejected' || s.status === 'Needs Changes') ? '<button type="button" class="btn btn-ghost btn-sm" data-resubmit="' + escapeHtml(s.id) + '">Resubmit</button>' : '')
+          + '</td></tr>';
+      });
+      html += '</tbody></table>';
+    }
+    html += '</div>';
+
+    mainEl.innerHTML = html;
+    attachTabBarHandlers();
+    attachSubmitMaterialHandlers(parent);
+  }
+
+  function renderStagedFilesList(){
+    var el = document.getElementById('sm-file-list');
+    if(!el) return;
+    if(!stagedFiles.length){ el.innerHTML = ''; return; }
+    el.innerHTML = stagedFiles.map(function(f, idx){
+      return '<div class="file-row"><div class="fn">' + fileIcon() + '<span>' + escapeHtml(f.name) + '</span></div>'
+        + '<div class="meta"><button type="button" class="btn btn-ghost btn-sm" data-remove-staged="' + idx + '">Remove</button></div></div>';
+    }).join('');
+    el.querySelectorAll('[data-remove-staged]').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        stagedFiles.splice(parseInt(btn.getAttribute('data-remove-staged'), 10), 1);
+        renderStagedFilesList();
+        validateSubmitForm(!!resubmitParentId);
+      });
+    });
+  }
+
+  function validateSubmitForm(requireChanges){
+    var submitBtn = document.getElementById('sm-submit-btn');
+    if(!submitBtn) return;
+    var name = document.getElementById('sm-name').value.trim();
+    var email = document.getElementById('sm-email').value.trim();
+    var type = document.getElementById('sm-type').value;
+    var attGuidelines = document.getElementById('att-guidelines').checked;
+    var attMeets = document.getElementById('att-meets').checked;
+    var attOwns = document.getElementById('att-owns').checked;
+    var attChangesEl = document.getElementById('att-changes');
+    var attChangesOk = requireChanges ? (attChangesEl && attChangesEl.checked) : true;
+    submitBtn.disabled = !(name && email && type && stagedFiles.length && attGuidelines && attMeets && attOwns && attChangesOk);
+  }
+
+  function attachSubmitMaterialHandlers(parent){
+    var cancelBtn = document.getElementById('sm-cancel-resubmit');
+    if(cancelBtn){ cancelBtn.addEventListener('click', function(){ resubmitParentId = null; stagedFiles = []; renderSubmitMaterial(); }); }
+
+    var fileInput = document.getElementById('sm-files');
+    if(fileInput){
+      fileInput.addEventListener('change', function(){
+        Array.prototype.forEach.call(fileInput.files, function(f){ stagedFiles.push(f); });
+        fileInput.value = '';
+        renderStagedFilesList();
+        validateSubmitForm(!!parent);
+      });
+    }
+    renderStagedFilesList();
+
+    ['sm-name','sm-email','sm-type','att-guidelines','att-meets','att-owns','att-changes'].forEach(function(id){
+      var el = document.getElementById(id);
+      if(el){ el.addEventListener(el.tagName === 'SELECT' || el.type === 'checkbox' ? 'change' : 'input', function(){ validateSubmitForm(!!parent); }); }
+    });
+
+    document.querySelectorAll('[data-resubmit]').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        resubmitParentId = btn.getAttribute('data-resubmit');
+        stagedFiles = [];
+        renderSubmitMaterial();
+      });
+    });
+
+    var submitBtn = document.getElementById('sm-submit-btn');
+    if(submitBtn){ submitBtn.addEventListener('click', function(){ submitMaterialSubmission(parent); }); }
+  }
+
+  async function submitMaterialSubmission(parent){
+    var name = document.getElementById('sm-name').value.trim();
+    var email = document.getElementById('sm-email').value.trim();
+    var phone = document.getElementById('sm-phone').value.trim();
+    var type = document.getElementById('sm-type').value;
+    var carrierTags = document.getElementById('sm-carriers').value.split(',').map(function(s){ return s.trim(); }).filter(Boolean);
+    var lob = Array.prototype.slice.call(document.querySelectorAll('.sm-lob:checked')).map(function(el){ return el.value; });
+    var attGuidelines = document.getElementById('att-guidelines').checked;
+    var attMeets = document.getElementById('att-meets').checked;
+    var attChangesEl = document.getElementById('att-changes');
+    var attChanges = parent ? (attChangesEl && attChangesEl.checked) : null;
+    var attOwns = document.getElementById('att-owns').checked;
+
+    if(!name || !email || !type || !stagedFiles.length || !attGuidelines || !attMeets || !attOwns || (parent && !attChanges)){
+      toast('Please complete all required fields, at least one file, and all attestations.');
+      return;
+    }
+
+    var submitBtn = document.getElementById('sm-submit-btn');
+    submitBtn.disabled = true; submitBtn.textContent = 'Submitting...';
+
+    var insertResult = await sb.from('material_submissions').insert({
+      org_id: myOrgId, submitter_name: name, submitter_email: email, submitter_phone: phone || null,
+      material_type: type, carrier_tags: carrierTags, line_of_business: lob,
+      attestation_reviewed_guidelines: attGuidelines, attestation_meets_requirements: attMeets,
+      attestation_changes_made: attChanges, attestation_owns_creative: attOwns,
+      version: parent ? (parent.version + 1) : 1, parent_submission_id: parent ? parent.id : null
+    }).select().single();
+
+    if(insertResult.error){
+      toast('Could not submit: ' + insertResult.error.message);
+      submitBtn.disabled = false; submitBtn.textContent = 'Submit for Review';
+      return;
+    }
+
+    var submissionId = insertResult.data.id;
+    var uploadFailures = [];
+    for(var i = 0; i < stagedFiles.length; i++){
+      var f = stagedFiles[i];
+      var path = 'orgs/' + myOrgId + '/' + submissionId + '/' + Date.now() + '-' + f.name.replace(/[^A-Za-z0-9._-]/g, '_');
+      var upResult = await sb.storage.from(MATERIAL_SUBMISSION_FILES_BUCKET).upload(path, f);
+      if(upResult.error){ uploadFailures.push(f.name); continue; }
+      await sb.from('material_submission_files').insert({ submission_id: submissionId, file_path: path, file_name: f.name });
+    }
+
+    toast(uploadFailures.length
+      ? 'Submitted, but ' + uploadFailures.length + ' file(s) failed to upload: ' + uploadFailures.join(', ')
+      : 'Material submitted for compliance review.');
+
+    resubmitParentId = null;
+    stagedFiles = [];
+    await loadMySubmissions();
+    renderSubmitMaterial();
+  }
+
+  // =============================================================
+  // Allegation/Audit Request -- the same public form at allegations.html
+  // (shareable link, no login required), reachable here too so an already-
+  // logged-in partner doesn't have to leave the portal. Both paths write to
+  // the same `allegations` table the exact same way: a direct, unauthenticated-
+  // style insert with no .select() (no RETURNING), since only My Health Angel admins
+  // have a SELECT policy on this table -- requesting the row back after
+  // insert would trip that same policy and fail, logged in or not.
+  // =============================================================
+
+  function renderAllegationRequest(){
+    var html = '';
+    html += renderTabBar();
+    html += '<div class="page-title">Submit A New Allegation/Audit Request</div>';
+    html += '<div class="page-sub">Welcome to the My Health Angel Allegation/Audit Request Form. Once submitted, your request will be automatically recorded and tracked within our compliance management system. Our team is committed to reviewing and resolving all allegation requests in a timely manner. Standard processing time is within 3 business days of receipt. Please note that during our peak season &mdash; June 1st through December 7th &mdash; increased volume may extend processing time to 5-7 business days. We appreciate your patience and understanding during this period. For compliance-related questions or concerns outside of this form, please contact our compliance team directly at <a href="mailto:compliance@myhealthangel.com" style="color:var(--cyan-2)">compliance@myhealthangel.com</a>.</div>';
+
+    html += '<div class="panel" style="max-width:640px;"><div style="padding:16px;">';
+    html += '<div class="field"><label>Receival Date</label><input class="inp" id="alg-receival-date" type="date" /></div>';
+    html += '<div class="field"><label>Due Date</label><input class="inp" id="alg-due-date" type="date" /></div>';
+    html += '<div class="field"><label>Email Thread Title <span style="font-weight:400;color:var(--muted);">(optional)</span></label>'
+      + '<div style="font-size:11.5px;color:var(--muted);margin:-2px 0 6px;">If the allegation/audit was also sent via email please provide the email thread title to ensure alignment and tracking of your request</div>'
+      + '<input class="inp" id="alg-email-thread-title" type="text" /></div>';
+    html += '<div class="field"><label>Allegation Form Link <span style="font-weight:400;color:var(--muted);">(optional)</span></label>'
+      + '<div style="font-size:11.5px;color:var(--muted);margin:-2px 0 6px;">If your organization utilizes a form to satisfy your allegation/audit requests please paste the corresponding form link for the requested allegation below.</div>'
+      + '<textarea class="inp" id="alg-form-link" maxlength="2000" style="min-height:90px;"></textarea>'
+      + '<div style="text-align:right;font-size:11px;color:var(--muted-2);margin-top:4px;"><span id="alg-form-link-count">0</span>/2000</div></div>';
+    html += '<div class="field"><label>Organization Name</label><input class="inp" id="alg-org-name" type="text" /></div>';
+    html += '<div class="field"><label>Submitter Name</label><input class="inp" id="alg-submitter-name" type="text" /></div>';
+    html += '<div class="field"><label>Submitter Email</label><input class="inp" id="alg-submitter-email" type="email" value="' + escapeHtml(mySession ? mySession.user.email : '') + '" /></div>';
+    html += '<div class="field"><label>Lead Date</label><input class="inp" id="alg-lead-date" type="date" /></div>';
+    html += '<div class="field"><label>Corresponding Lead Phone Number</label><div style="display:flex;gap:8px;">'
+      + '<select class="inp" id="alg-lead-phone-cc" style="width:92px;flex:none;"><option value="+1">+1</option><option value="+52">+52</option><option value="+44">+44</option><option value="+91">+91</option><option value="+63">+63</option><option value="+61">+61</option></select>'
+      + '<input class="inp" id="alg-lead-phone-number" type="tel" style="flex:1;" /></div></div>';
+    html += '<div class="field"><label>Lead Name</label><div style="font-size:11.5px;color:var(--muted);margin:-2px 0 6px;">(If unknown enter NA)</div><input class="inp" id="alg-lead-name" type="text" /></div>';
+    html += '<div class="field"><label>Call Duration</label><div style="font-size:11.5px;color:var(--muted);margin:-2px 0 6px;">(If unknown enter NA)</div><input class="inp" id="alg-call-duration" type="text" /></div>';
+    html += '<button type="button" class="btn btn-primary" id="alg-submit-btn">Submit Request</button>';
+    html += '</div></div>';
+
+    mainEl.innerHTML = html;
+    attachTabBarHandlers();
+    attachAllegationRequestHandlers();
+  }
+
+  function attachAllegationRequestHandlers(){
+    var receivalEl = document.getElementById('alg-receival-date');
+    if(receivalEl && !receivalEl.value){ receivalEl.value = new Date().toISOString().slice(0, 10); }
+
+    var linkInput = document.getElementById('alg-form-link');
+    var linkCount = document.getElementById('alg-form-link-count');
+    if(linkInput && linkCount){ linkInput.addEventListener('input', function(){ linkCount.textContent = linkInput.value.length; }); }
+
+    var submitBtn = document.getElementById('alg-submit-btn');
+    if(submitBtn){ submitBtn.addEventListener('click', submitAllegationRequest); }
+  }
+
+  async function submitAllegationRequest(){
+    var receivalDate = document.getElementById('alg-receival-date').value;
+    var dueDate = document.getElementById('alg-due-date').value;
+    var emailThreadTitle = document.getElementById('alg-email-thread-title').value.trim();
+    var allegationFormLink = document.getElementById('alg-form-link').value.trim();
+    var orgName = document.getElementById('alg-org-name').value.trim();
+    var submitterName = document.getElementById('alg-submitter-name').value.trim();
+    var submitterEmail = document.getElementById('alg-submitter-email').value.trim();
+    var leadDate = document.getElementById('alg-lead-date').value;
+    var leadPhoneCc = document.getElementById('alg-lead-phone-cc').value;
+    var leadPhoneNumber = document.getElementById('alg-lead-phone-number').value.trim();
+    var leadName = document.getElementById('alg-lead-name').value.trim();
+    var callDuration = document.getElementById('alg-call-duration').value.trim();
+
+    if(!receivalDate || !dueDate || !orgName || !submitterName || !submitterEmail || !leadDate || !leadPhoneNumber || !leadName || !callDuration){
+      toast('Please fill in every required field.');
+      return;
+    }
+
+    var submitBtn = document.getElementById('alg-submit-btn');
+    submitBtn.disabled = true; submitBtn.textContent = 'Submitting...';
+
+    var insertResult = await sb.from('allegations').insert({
+      receival_date: receivalDate, due_date: dueDate, email_thread_title: emailThreadTitle || null,
+      allegation_form_link: allegationFormLink || null, org_name: orgName, submitter_name: submitterName,
+      submitter_email: submitterEmail, lead_date: leadDate,
+      lead_phone_country_code: leadPhoneCc, lead_phone_number: leadPhoneNumber,
+      lead_name: leadName, call_duration: callDuration
+    });
+
+    if(insertResult.error){
+      toast('Could not submit your request: ' + insertResult.error.message);
+      submitBtn.disabled = false; submitBtn.textContent = 'Submit Request';
+      return;
+    }
+
+    toast('Your allegation/audit request has been submitted.');
+    renderAllegationRequest();
+  }
+
+  function renderCreatives(){
+    currentMaterialId = null;
+    var rows = filteredRows();
+    var total = materials.length;
+    var th = function(key, label){
+      var s = sort.key === key;
+      return '<th class="sortable' + (s?' sorted':'') + '" data-sort="' + key + '">' + label + ' <span class="arrow">' + (s ? (sort.dir>0?'▲':'▼') : '↕') + '</span></th>';
+    };
+    var opt = function(values, selected){
+      return values.map(function(v){ return '<option value="'+escapeHtml(String(v))+'"' + (selected===String(v)?' selected':'') + '>' + escapeHtml(String(v)) + '</option>'; }).join('');
+    };
+
+    var html = '';
+    html += renderTabBar();
+    html += '<div class="page-title">Creatives</div>';
+    html += '<div class="page-sub">All creative assets shared with your organization</div>';
+
+    html += '<div class="toolbar">';
+    html += '<div class="search"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>';
+    html += '<input type="text" id="fq" placeholder="Search SMID, carrier, benefit..." value="' + escapeHtml(filter.q) + '" /></div>';
+    html += '<select id="fstatus"><option value="">All statuses</option>' + opt(STATUSES, filter.status) + '</select>';
+    html += '<select id="fpy"><option value="">All plan years</option>' + opt(allPlanYears(), filter.py) + '</select>';
+    html += '<select id="fcarrier"><option value="">All carriers</option>' + opt(allCarriers(), filter.carrier) + '</select>';
+    html += '<button class="btn btn-ghost btn-sm" id="reset-filter-btn">Reset</button>';
+    html += '<span class="updated"><button class="btn btn-ghost btn-sm" id="refresh-btn">&#8635; Refresh</button></span>';
+    html += '</div>';
+
+    var selCount = Object.keys(sel).length;
+    html += '<div class="selbar' + (selCount?'':' none') + '" id="selbar">';
+    html += '<span>' + (selCount ? (selCount + ' creative' + (selCount>1?'s':'') + ' selected') : 'No creatives selected') + '</span>';
+    html += '<button class="btn btn-cyan btn-sm" id="export-csv-btn">&#8681; Export summary (.csv)</button>';
+    html += '<button class="btn btn-ghost btn-sm" id="export-docs-btn">&#8681; Download documents</button>';
+    html += '<button class="btn btn-ghost btn-sm" id="clear-sel-btn">Clear</button>';
+    html += '<span class="sp">Tick individual creatives, or use the header box to select all.</span>';
+    html += '</div>';
+
+    html += '<div class="table-wrap"><table><thead><tr>';
+    html += '<th class="chkcell"><input type="checkbox" id="selAll" title="Select all" /></th>';
+    html += th('smid','SMID') + th('status','Status') + th('plan_year','Plan Year') + th('is_annual_resubmission','Annual Re-Submission') + th('medium','Medium') + th('classification','Classification') + '<th>Carrier Opt-In</th>';
+    html += '</tr></thead><tbody>';
+    if(rows.length){
+      rows.forEach(function(m){
+        html += '<tr class="clickable" data-open="' + m.id + '">';
+        html += '<td class="chkcell"><input type="checkbox" class="rowChk" data-id="' + m.id + '"' + (sel[m.id]?' checked':'') + ' /></td>';
+        html += '<td class="smid">' + escapeHtml(m.smid) + '</td>';
+        html += '<td>' + badge(statusFor(m)) + '</td>';
+        html += '<td>' + escapeHtml(String(m.plan_year||'')) + '</td>';
+        html += '<td>' + yesNo(m.is_annual_resubmission) + '</td>';
+        html += '<td>' + escapeHtml(m.medium||'') + '</td>';
+        html += '<td>' + escapeHtml(m.classification||'') + '</td>';
+        html += '<td class="wrapcell">' + carrierCell(m) + '</td>';
+        html += '</tr>';
+      });
+    } else {
+      html += '<tr><td colspan="8"><div class="empty">' + (total ? 'No creatives match your filters.' : 'No materials have been shared with your organization yet.') + '</div></td></tr>';
+    }
+    html += '</tbody></table>';
+    html += '<div class="tablefoot"><span>Showing ' + rows.length + ' of ' + total + ' creatives</span><span>Sorted by ' + sort.key + ' ' + (sort.dir>0?'ascending':'descending') + '</span></div>';
+    html += '</div>';
+
+    mainEl.innerHTML = html;
+    attachTabBarHandlers();
+    attachCreativesHandlers();
+  }
+
+  function attachCreativesHandlers(){
+    var fq = document.getElementById('fq');
+    if(fq){
+      fq.addEventListener('input', function(){ filter.q = fq.value; renderCreatives(); document.getElementById('fq').focus(); document.getElementById('fq').setSelectionRange(fq.value.length, fq.value.length); });
+    }
+    var fstatus = document.getElementById('fstatus');
+    if(fstatus) fstatus.addEventListener('change', function(){ filter.status = fstatus.value; renderCreatives(); });
+    var fpy = document.getElementById('fpy');
+    if(fpy) fpy.addEventListener('change', function(){ filter.py = fpy.value; renderCreatives(); });
+    var fcarrier = document.getElementById('fcarrier');
+    if(fcarrier) fcarrier.addEventListener('change', function(){ filter.carrier = fcarrier.value; renderCreatives(); });
+    var resetBtn = document.getElementById('reset-filter-btn');
+    if(resetBtn) resetBtn.addEventListener('click', function(){ filter = {q:'',status:'',py:'',carrier:''}; renderCreatives(); });
+    var refreshBtn = document.getElementById('refresh-btn');
+    if(refreshBtn) refreshBtn.addEventListener('click', function(){ loadMaterials(); });
+
+    document.querySelectorAll('th.sortable').forEach(function(el){
+      el.addEventListener('click', function(){
+        var key = el.getAttribute('data-sort');
+        if(sort.key === key) sort.dir *= -1; else sort = {key:key, dir:1};
+        renderCreatives();
+      });
+    });
+
+    document.querySelectorAll('tr[data-open]').forEach(function(el){
+      el.addEventListener('click', function(e){
+        if(e.target && e.target.closest && e.target.closest('.chkcell')) return;
+        openMaterial(el.getAttribute('data-open'));
+      });
+    });
+
+    document.querySelectorAll('.rowChk').forEach(function(el){
+      el.addEventListener('click', function(e){ e.stopPropagation(); });
+      el.addEventListener('change', function(){
+        if(el.checked) sel[el.getAttribute('data-id')] = true; else delete sel[el.getAttribute('data-id')];
+        updateSelBar();
+      });
+    });
+    var selAll = document.getElementById('selAll');
+    if(selAll){
+      selAll.addEventListener('click', function(e){ e.stopPropagation(); });
+      selAll.addEventListener('change', function(){
+        document.querySelectorAll('.rowChk').forEach(function(cb){
+          cb.checked = selAll.checked;
+          if(selAll.checked) sel[cb.getAttribute('data-id')] = true; else delete sel[cb.getAttribute('data-id')];
+        });
+        updateSelBar();
+      });
+    }
+    var clearBtn = document.getElementById('clear-sel-btn');
+    if(clearBtn) clearBtn.addEventListener('click', function(){ sel = {}; renderCreatives(); });
+    var exportCsvBtn = document.getElementById('export-csv-btn');
+    if(exportCsvBtn) exportCsvBtn.addEventListener('click', function(){ exportCsv(selectedRows()); });
+    var exportDocsBtn = document.getElementById('export-docs-btn');
+    if(exportDocsBtn) exportDocsBtn.addEventListener('click', function(){ exportDocs(selectedRows()); });
+  }
+
+  function selectedRows(){
+    var ids = Object.keys(sel);
+    return materials.filter(function(m){ return sel[m.id]; });
+  }
+  function updateSelBar(){
+    var bar = document.getElementById('selbar');
+    if(!bar) return;
+    var n = Object.keys(sel).length;
+    bar.querySelector('span').textContent = n ? (n + ' creative' + (n>1?'s':'') + ' selected') : 'No creatives selected';
+    bar.classList.toggle('none', n===0);
+    var boxes = Array.prototype.slice.call(document.querySelectorAll('.rowChk'));
+    var selAll = document.getElementById('selAll');
+    if(selAll) selAll.checked = boxes.length>0 && boxes.every(function(cb){ return cb.checked; });
+  }
+
+  // =============================================================
+  // Export
+  // =============================================================
+
+  function csvEscape(v){ v = (v==null?'':String(v)); return /[",\n]/.test(v) ? '"' + v.replace(/"/g,'""') + '"' : v; }
+  function downloadText(text, name, type){
+    var b = new Blob([text], {type: type + ';charset=utf-8;'});
+    var url = URL.createObjectURL(b);
+    var a = document.createElement('a'); a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function(){ URL.revokeObjectURL(url); }, 1500);
+  }
+  function today(){ return new Date().toISOString().slice(0,10); }
+
+  function exportCsv(rows){
+    if(!rows.length){ toast('Select at least one creative first'); return; }
+    var head = ['SMID','Status','Plan Year','Classification','Annual Re-Submission','Medium','Benefit Type','Carrier Opt-Ins','Distribution Area','Timeframe For Use','Start Date','End Date','HPMS Filing Date','Media Type','Documents'];
+    var lines = [head.join(',')];
+    rows.forEach(function(m){
+      var docs = (filesByMaterial[m.id]||[]).map(function(f){ return f.file_name; }).join('; ');
+      var benefitTypes = Array.isArray(m.benefit_type) ? m.benefit_type.slice().sort().join('; ') : (m.benefit_type||'');
+      lines.push([
+        m.smid, statusFor(m), m.plan_year, m.classification, m.is_annual_resubmission?'Yes':'No', m.medium, benefitTypes,
+        carriersOf(m).map(function(o){ return o.carrier + (o.opted_in ? ' (opted in ' + (o.optin_date||'') + ')' : ' (pending)'); }).join('; '),
+        m.distribution_area, m.time_period, m.start_date, m.end_date, m.hpms_filing_date, m.media_type, docs
+      ].map(csvEscape).join(','));
+    });
+    downloadText(lines.join('\n'), 'mha-creatives-' + today() + '.csv', 'text/csv');
+    toast('Exported ' + rows.length + ' creative' + (rows.length>1?'s':'') + ' to CSV');
+  }
+
+  async function downloadStoragePath(path, filename, bucket){
+    // The `download` attribute on <a> is ignored by browsers for
+    // cross-origin URLs (this signed URL is on Supabase's own origin, not
+    // ours), so it can't be what makes the saved file take this name --
+    // passing `download` into createSignedUrl instead makes Supabase send a
+    // real Content-Disposition: attachment header, which does work
+    // cross-origin and is what actually controls the saved filename.
+    var result = await sb.storage.from(bucket || FILES_BUCKET).createSignedUrl(path, 300, filename ? {download: filename} : undefined);
+    if(result.error || !result.data){
+      toast('Could not generate a download link' + (result.error ? ': ' + result.error.message : ''));
+      return;
+    }
+    var a = document.createElement('a'); a.href = result.data.signedUrl; a.download = filename; a.target = '_blank'; document.body.appendChild(a); a.click(); a.remove();
+  }
+
+  async function exportDocs(rows){
+    var files = [];
+    rows.forEach(function(m){
+      (filesByMaterial[m.id]||[]).forEach(function(f){ files.push(f); });
+      carriersOf(m).forEach(function(o){
+        if(o.confirmation_file_id && fileById[o.confirmation_file_id]) files.push(fileById[o.confirmation_file_id]);
+      });
+    });
+    if(!files.length){ toast('No downloadable documents on the selected creatives'); return; }
+    toast('Downloading ' + files.length + ' document' + (files.length>1?'s':'') + '...');
+    for(var i=0;i<files.length;i++){
+      await downloadStoragePath(files[i].storage_path, files[i].file_name);
+      await new Promise(function(res){ setTimeout(res, 400); });
+    }
+  }
+
+  // =============================================================
+  // Material detail
+  // =============================================================
+
+  function infoCardsHtml(m){
+    var optRows = carriersOf(m).length ? carriersOf(m).map(function(o){
+      var f = o.confirmation_file_id ? fileById[o.confirmation_file_id] : null;
+      return '<div class="optin-row">'
+        + '<div class="optin"><span class="chk' + (o.opted_in?'':' no') + '">' + (o.opted_in?'✓':'–') + '</span> ' + escapeHtml(o.carrier) + '<span style="color:var(--muted);margin-left:auto">Opt-in: ' + escapeHtml(o.optin_date || 'pending') + '</span></div>'
+        + '<div style="margin-left:24px;font-size:11.5px;color:var(--muted-2);">Pre-Approval Date: ' + escapeHtml(o.pre_approval_date || '—') + '</div>'
+        + (f ? '<a class="optin-file" href="#" data-dl-file="'+escapeHtml(f.id)+'">' + fileIcon() + escapeHtml(f.file_name) + '</a>' : '<span class="optin-file none">No confirmation attached</span>')
+        + '</div>';
+    }).join('') : '<span style="color:var(--muted)">None recorded</span>';
+
+    // Grouped under their own sub-headers (Clean & Final / Distribution),
+    // not just a small inline category tag, so it's obvious at a glance
+    // which document is which -- matches the admin side's Materials panel.
+    var files = filesByMaterial[m.id] || [];
+    var fileGroup = function(label, list){
+      if(!list.length) return '';
+      return '<div style="margin-bottom:10px;">'
+        + '<div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.03em;color:var(--muted-2);padding:8px 16px 2px;">' + escapeHtml(label) + '</div>'
+        + list.map(function(f){
+            return '<div class="file-row"><div class="fn">' + fileIcon() + '<a href="#" data-dl-file="'+escapeHtml(f.id)+'">' + escapeHtml(f.file_name) + '</a></div><div class="meta">' + (f.uploaded_at ? String(f.uploaded_at).slice(0,10) : '') + '</div></div>';
+          }).join('')
+        + '</div>';
+    };
+    var cleanFinalFiles = files.filter(function(f){ return f.category === 'Clean & Final'; });
+    var distributionFiles = files.filter(function(f){ return f.category === 'Distribution'; });
+    var otherFiles = files.filter(function(f){ return f.category !== 'Clean & Final' && f.category !== 'Distribution'; });
+    var filesHtml = files.length
+      ? (fileGroup('Clean & Final', cleanFinalFiles) + fileGroup('Distribution Area', distributionFiles) + fileGroup('Other', otherFiles))
+      : '<div class="empty">No files attached.</div>';
+
+    return '<div class="detail-grid">'
+      + '<div class="panel"><div class="card-h">Asset</div><div class="kv">'
+      + '<div class="row"><div class="k">Plan Year</div><div class="v">' + escapeHtml(String(m.plan_year||'—')) + '</div></div>'
+      + '<div class="row"><div class="k">Classification</div><div class="v">' + escapeHtml(m.classification||'—') + '</div></div>'
+      + '<div class="row"><div class="k">Annual Re-Submission</div><div class="v">' + yesNo(m.is_annual_resubmission) + '</div></div>'
+      + '<div class="row"><div class="k">Medium</div><div class="v">' + escapeHtml(m.medium||'—') + '</div></div>'
+      + '<div class="row"><div class="k">Benefit Type</div><div class="v">' + escapeHtml(Array.isArray(m.benefit_type)?m.benefit_type.slice().sort().join(', '):(m.benefit_type||'—')) + '</div></div>'
+      + '<div class="row"><div class="k">Carrier Opt-In</div><div class="v">' + carrierCell(m) + '</div></div>'
+      + '<div class="row"><div class="k">Distribution Area</div><div class="v">' + escapeHtml(m.distribution_area||'—') + '</div></div>'
+      + '</div></div>'
+      + '<div class="panel"><div class="card-h">Dates</div><div class="kv">'
+      + '<div class="row"><div class="k">Timeframe For Use</div><div class="v">' + escapeHtml(m.time_period||'—') + '</div></div>'
+      + '<div class="row"><div class="k">Start Date</div><div class="v">' + escapeHtml(m.start_date||'—') + '</div></div>'
+      + '<div class="row"><div class="k">End Date</div><div class="v">' + escapeHtml(m.end_date||'—') + '</div></div>'
+      + '</div></div>'
+      + '<div class="panel"><div class="card-h">HPMS</div><div class="kv">'
+      + '<div class="row"><div class="k">Filing Date</div><div class="v">' + escapeHtml(m.hpms_filing_date||'—') + '</div></div>'
+      + '<div class="row"><div class="k">Media Type</div><div class="v">' + escapeHtml(m.media_type||'—') + '</div></div>'
+      + '<div class="row"><div class="k">HPMS Opt-Ins</div><div class="v">' + optRows + '</div></div>'
+      + '</div></div>'
+      + '<div class="panel"><div class="card-h">Geotargeting Grid</div><div class="kv">'
+      + (m.geotargeting_grid_file_path
+          ? '<div class="row"><div class="k">File</div><div class="v"><a href="#" data-dl-geotargeting-grid>' + fileIcon() + ' ' + escapeHtml(m.geotargeting_grid_file_name||'Geotargeting Grid') + '</a></div></div>'
+          : '<div class="empty">No Geotargeting Grid on file.</div>')
+      + '</div></div>'
+      + '<div class="panel"><div class="card-h">Associated Files</div><div>' + filesHtml + '</div></div>'
+      + '</div>';
+  }
+
+  function renderThreadHtml(msgs){
+    if(!msgs || !msgs.length) return '<div class="empty">There are no discussions yet.</div>';
+    return msgs.map(function(d){
+      var isAdmin = d.author_type === 'admin';
+      return '<div class="disc-msg"><div class="av ' + (isAdmin?'qv':'me') + '">' + escapeHtml((d.author_name||'?').split(' ').map(function(w){return w[0];}).slice(0,2).join('').toUpperCase()) + '</div>'
+        + '<div class="body"><div class="who">' + escapeHtml(d.author_name||'') + '<span>' + escapeHtml(String(d.created_at||'').replace('T',' ').slice(0,16)) + '</span></div>'
+        + '<div class="txt">' + escapeHtml(d.body) + '</div></div></div>';
+    }).join('');
+  }
+
+  async function openMaterial(id){
+    var m = materials.filter(function(x){ return x.id === id; })[0];
+    if(!m) return;
+    currentMaterialId = id;
+    mainEl.innerHTML = '<div class="empty">Loading...</div>';
+
+    var msgResult = await sb.from('messages').select('*').eq('material_id', id).order('created_at');
+    var thread = msgResult.error ? [] : (msgResult.data || []);
+    if(msgResult.error) console.error('load messages error:', msgResult.error);
+
+    renderDetail(m, thread);
+  }
+
+  function goBackFromDetail(){
+    activeTab = 'creatives';
+    renderCreatives();
+  }
+
+  function renderDetail(m, thread){
+    var html = '';
+    html += '<button class="back" id="back-btn">&larr; Back to Creatives</button>';
+    html += '<div class="detail-head"><div><h2>' + escapeHtml(m.smid) + '</h2><div class="sub">' + escapeHtml(m.classification||'') + ' · Plan Year ' + escapeHtml(String(m.plan_year||'')) + (m.is_annual_resubmission ? ' · Annual Re-Submission' : '') + '</div></div>';
+    html += '<div class="detail-actions">' + badge(statusFor(m));
+    html += '<div class="status-menu"><button class="btn btn-cyan btn-sm" id="status-menu-btn">Update Status &#9662;</button>';
+    html += '<div class="status-list hidden" id="status-list">' + STATUSES.map(function(s){ return '<button data-set-status="'+escapeHtml(s)+'">' + badge(s) + '</button>'; }).join('') + '</div></div>';
+    html += '<button class="btn btn-ghost btn-sm" id="history-btn">Status History</button>';
+    html += '</div></div>';
+    html += '<p style="color:var(--muted);font-size:12px;margin:-2px 0 4px">Status reflects your organization\'s internal compliance process and is visible only to your organization and My Health Angel.</p>';
+    html += infoCardsHtml(m);
+    html += '<div class="panel"><div class="panel-h">Discussions / Communications with My Health Angel</div>';
+    html += '<div class="disc" id="disc-list">' + renderThreadHtml(thread) + '</div>';
+    html += '<div class="disc-compose"><input class="inp" id="disc-input" placeholder="Write a message to My Health Angel..." /><button class="btn btn-primary btn-sm" id="disc-send-btn">Send</button></div>';
+    html += '</div>';
+    html += '<p style="color:var(--muted);font-size:12px;margin-top:10px">This conversation is private between your organization and My Health Angel. No other partner can see it.</p>';
+
+    mainEl.innerHTML = html;
+    attachDetailHandlers(m);
+  }
+
+  function attachDetailHandlers(m){
+    var backBtn = document.getElementById('back-btn');
+    if(backBtn) backBtn.addEventListener('click', function(){ goBackFromDetail(); });
+
+    var statusMenuBtn = document.getElementById('status-menu-btn');
+    var statusList = document.getElementById('status-list');
+    if(statusMenuBtn && statusList){
+      statusMenuBtn.addEventListener('click', function(e){ e.stopPropagation(); statusList.classList.toggle('hidden'); });
+      document.addEventListener('click', function(){ statusList.classList.add('hidden'); }, { once:true });
+    }
+    document.querySelectorAll('[data-set-status]').forEach(function(el){
+      el.addEventListener('click', function(){ setClientStatus(m, el.getAttribute('data-set-status')); });
+    });
+
+    var historyBtn = document.getElementById('history-btn');
+    if(historyBtn) historyBtn.addEventListener('click', function(){ openHistory(m.id); });
+
+    var dlGeoGridEl = document.querySelector('[data-dl-geotargeting-grid]');
+    if(dlGeoGridEl){
+      dlGeoGridEl.addEventListener('click', function(e){
+        e.preventDefault();
+        if(!m.geotargeting_grid_file_path){ toast('File not found'); return; }
+        downloadStoragePath(m.geotargeting_grid_file_path, m.geotargeting_grid_file_name || 'geotargeting-grid.xlsx');
+      });
+    }
+
+    document.querySelectorAll('[data-dl-file]').forEach(function(el){
+      el.addEventListener('click', function(e){
+        e.preventDefault();
+        var f = fileById[el.getAttribute('data-dl-file')];
+        if(!f){ toast('File not found'); return; }
+        downloadStoragePath(f.storage_path, f.file_name);
+      });
+    });
+
+    var sendBtn = document.getElementById('disc-send-btn');
+    var discInput = document.getElementById('disc-input');
+    if(sendBtn && discInput){
+      var send = function(){ postMessage(m.id, discInput.value.trim()); };
+      sendBtn.addEventListener('click', send);
+      discInput.addEventListener('keydown', function(e){ if(e.key === 'Enter') send(); });
+    }
+  }
+
+  async function setClientStatus(m, newStatus){
+    var prev = statusFor(m);
+    if(prev === newStatus) return;
+    var upsertResult = await sb.from('material_org_status').upsert({ material_id: m.id, org_id: myOrgId, status: newStatus }, { onConflict: 'material_id,org_id' });
+    if(upsertResult.error){ toast('Could not update status: ' + upsertResult.error.message); return; }
+    await sb.from('material_status_history').insert({ material_id: m.id, org_id: myOrgId, from_status: prev, to_status: newStatus, changed_by: mySession.user.email });
+    // audit_log's insert policy is deliberately open (with check (true)) so
+    // partner-originated events land in the same trail admin sees, not just
+    // material_status_history -- matches how share grants/revokes are
+    // already logged automatically by the DB trigger on material_shares.
+    // Best-effort: a failure here should never block the status update itself.
+    var auditResult = await sb.from('audit_log').insert({ actor_type: 'partner', actor_name: mySession.user.email, kind: 'status', action: 'Status changed', target: m.smid, detail: prev + ' → ' + newStatus + ' (partner)', material_id: m.id, org_id: myOrgId });
+    if(auditResult.error){ console.error('audit_log insert failed:', auditResult.error); }
+    myStatusByMaterial[m.id] = newStatus;
+    var idx = materials.findIndex(function(x){ return x.id === m.id; });
+    if(idx !== -1) materials[idx] = m;
+    openMaterial(m.id);
+    toast('Status updated to “' + newStatus + '”');
+  }
+
+  async function openHistory(materialId){
+    // RLS on material_status_history already returns exactly the right set:
+    // this org's own entries plus My Health Angel-level entries (org_id IS NULL) --
+    // never another partner's.
+    var result = await sb.from('material_status_history').select('*').eq('material_id', materialId).order('changed_at');
+    var list = result.error ? [] : (result.data || []);
+    var rows = list.length ? list.map(function(h){
+      var mine = h.org_id != null;
+      return '<tr><td>' + escapeHtml(h.from_status||'—') + '</td><td><b>' + escapeHtml(h.to_status) + '</b></td><td>' + escapeHtml(h.changed_by) + (mine ? ' <span class="pill" style="font-size:10px;padding:1px 7px">your organization</span>' : '') + '</td><td>' + escapeHtml(String(h.changed_at||'').replace('T',' ').slice(0,16)) + '</td></tr>';
+    }).join('') : '<tr><td colspan="4"><div class="empty">No status changes recorded.</div></td></tr>';
+    modal('<div class="modal-h"><h3>Status History</h3><button class="x" data-close-modal>&times;</button></div>'
+      + '<div class="modal-b" style="padding:6px 20px 20px"><table class="hist-table"><thead><tr><th>From</th><th>To</th><th>By</th><th>At</th></tr></thead><tbody>' + rows + '</tbody></table></div>');
+    document.querySelectorAll('[data-close-modal]').forEach(function(el){ el.addEventListener('click', function(){ el.closest('.overlay').remove(); }); });
+  }
+
+  async function postMessage(materialId, body){
+    if(!body) return;
+    var result = await sb.from('messages').insert({ material_id: materialId, org_id: myOrgId, author_type: 'partner', author_name: mySession.user.email, body: body });
+    if(result.error){ toast('Could not send message: ' + result.error.message); return; }
+    var input = document.getElementById('disc-input');
+    if(input) input.value = '';
+    var msgResult = await sb.from('messages').select('*').eq('material_id', materialId).order('created_at');
+    var thread = msgResult.error ? [] : (msgResult.data || []);
+    var list = document.getElementById('disc-list');
+    if(list) list.innerHTML = renderThreadHtml(thread);
+    toast('Message sent to My Health Angel');
+  }
+
+  // =============================================================
+  // Auth (unchanged flow, extended to bootstrap the partner app state)
+  // =============================================================
+
+  async function showApp(session){
+    authScreen.classList.add('hidden');
+    appScreen.classList.add('show');
+    document.getElementById('who-email').textContent = session.user.email;
+    mySession = session;
+    myOrgId = await fetchMyOrgId(session.user.id);
+    await loadMaterials();
+    await loadMySubmissions();
+  }
+
+  function showLogin(){
+    appScreen.classList.remove('show');
+    authScreen.classList.remove('hidden');
+    hideAllAuthForms();
+    loginForm.classList.remove('hidden');
+    document.getElementById('auth-title').textContent = 'My Health Angel Partner Portal';
+    authTag.textContent = 'Sign in to view your materials';
+  }
+
+  function showForgot(){
+    clearError();
+    hideAllAuthForms();
+    forgotForm.classList.remove('hidden');
+    document.getElementById('auth-title').textContent = 'Reset your password';
+    authTag.textContent = "We'll email you a link to reset it";
+  }
+
+  function showForgotSent(){
+    hideAllAuthForms();
+    forgotSent.classList.remove('hidden');
+  }
+
+  function showSetPassword(){
+    authScreen.classList.remove('hidden');
+    hideAllAuthForms();
+    setpwForm.classList.remove('hidden');
+    document.getElementById('auth-title').textContent = 'Welcome to My Health Angel';
+    authTag.textContent = 'One more step to finish setting up your account';
+  }
+
+  function showMfaEnroll(){
+    authScreen.classList.remove('hidden');
+    hideAllAuthForms();
+    mfaEnrollForm.classList.remove('hidden');
+    document.getElementById('auth-title').textContent = 'Set up two-factor authentication';
+    authTag.textContent = 'Required for every My Health Angel Partner Portal account';
+  }
+
+  function showMfaChallenge(){
+    authScreen.classList.remove('hidden');
+    hideAllAuthForms();
+    mfaChallengeForm.classList.remove('hidden');
+    document.getElementById('auth-title').textContent = 'Enter your authentication code';
+    authTag.textContent = '';
+  }
+
+  // The single gate everything funnels through before showApp() is ever
+  // called -- mandatory MFA means no code path is allowed to skip this.
+  async function checkMfaAndProceed(session){
+    clearError();
+    var aal = await sb.auth.mfa.getAuthenticatorAssuranceLevel();
+    if(aal.error){ showError(aal.error.message); return; }
+    if(aal.data.currentLevel === 'aal2'){
+      // Already fully verified this session (e.g. resumed from a valid cookie).
+      await showApp(session);
+      return;
+    }
+    if(aal.data.nextLevel === 'aal2'){
+      // A factor is already enrolled -- this session just hasn't verified it yet.
+      await startMfaChallenge();
+      return;
+    }
+    // No factor enrolled at all -- mandatory, so enroll now before anything else.
+    await startMfaEnrollment();
+  }
+
+  async function startMfaEnrollment(){
+    clearError();
+    var result = await sb.auth.mfa.enroll({ factorType: 'totp' });
+    if(result.error){ showError(result.error.message); return; }
+    pendingFactorId = result.data.id;
+    // Built via DOM properties, not innerHTML string concatenation -- the
+    // qr_code value is raw SVG markup containing its own double-quoted
+    // attributes, which broke out of an HTML attribute string when spliced
+    // in as text (rendered as a broken image plus the tail of the markup
+    // showing as literal page text). Setting .src as a property sidesteps
+    // that entirely, regardless of what characters the data contains.
+    var container = document.getElementById('mfa-qr-container');
+    container.innerHTML = '';
+    var img = document.createElement('img');
+    img.src = result.data.totp.qr_code;
+    img.alt = 'Scan with your authenticator app';
+    img.style.width = '180px';
+    img.style.height = '180px';
+    container.appendChild(img);
+    showMfaEnroll();
+  }
+
+  async function startMfaChallenge(){
+    clearError();
+    var factors = await sb.auth.mfa.listFactors();
+    if(factors.error){ showError(factors.error.message); return; }
+    var totpFactor = (factors.data.totp || [])[0];
+    if(!totpFactor){ showError('No authenticator factor found on this account.'); return; }
+    pendingFactorId = totpFactor.id;
+    var challenge = await sb.auth.mfa.challenge({ factorId: pendingFactorId });
+    if(challenge.error){ showError(challenge.error.message); return; }
+    pendingChallengeId = challenge.data.id;
+    showMfaChallenge();
+  }
+
+  document.getElementById('login-btn').addEventListener('click', async function(){
+    clearError();
+    var email = document.getElementById('login-email').value.trim();
+    var password = document.getElementById('login-password').value;
+    if(!email || !password){ showError('Enter your email and password.'); return; }
+    var result = await sb.auth.signInWithPassword({ email: email, password: password });
+    if(result.error){ showError(result.error.message); return; }
+    await checkMfaAndProceed(result.data.session);
+  });
+
+  document.getElementById('setpw-btn').addEventListener('click', async function(){
+    clearError();
+    var pw = document.getElementById('setpw-password').value;
+    var confirm = document.getElementById('setpw-confirm').value;
+    if(!pw || pw.length < 8){ showError('Password must be at least 8 characters.'); return; }
+    if(pw !== confirm){ showError('Passwords do not match.'); return; }
+    var result = await sb.auth.updateUser({ password: pw });
+    if(result.error){ showError(result.error.message); return; }
+    await checkMfaAndProceed(result.data.session);
+  });
+
+  document.getElementById('mfa-enroll-verify-btn').addEventListener('click', async function(){
+    clearError();
+    var code = document.getElementById('mfa-enroll-code').value.trim();
+    if(!code){ showError('Enter the 6-digit code.'); return; }
+    var challenge = await sb.auth.mfa.challenge({ factorId: pendingFactorId });
+    if(challenge.error){ showError(challenge.error.message); return; }
+    var verify = await sb.auth.mfa.verify({ factorId: pendingFactorId, challengeId: challenge.data.id, code: code });
+    if(verify.error){ showError(verify.error.message); return; }
+    var sessionResult = await sb.auth.getSession();
+    await showApp(sessionResult.data.session);
+  });
+
+  document.getElementById('mfa-challenge-verify-btn').addEventListener('click', async function(){
+    clearError();
+    var code = document.getElementById('mfa-challenge-code').value.trim();
+    if(!code){ showError('Enter the 6-digit code.'); return; }
+    var verify = await sb.auth.mfa.verify({ factorId: pendingFactorId, challengeId: pendingChallengeId, code: code });
+    if(verify.error){ showError(verify.error.message); return; }
+    var sessionResult = await sb.auth.getSession();
+    await showApp(sessionResult.data.session);
+  });
+
+  document.getElementById('logout-btn').addEventListener('click', async function(){
+    await sb.auth.signOut();
+  });
+
+  document.getElementById('show-forgot-btn').addEventListener('click', function(){
+    showForgot();
+  });
+  document.getElementById('back-to-login-btn').addEventListener('click', function(){
+    showLogin();
+  });
+  document.getElementById('back-to-login-btn2').addEventListener('click', function(){
+    showLogin();
+  });
+  document.getElementById('forgot-btn').addEventListener('click', async function(){
+    clearError();
+    var email = document.getElementById('forgot-email').value.trim();
+    if(!email){ showError('Enter your email.'); return; }
+    var result = await sb.auth.resetPasswordForEmail(email, { redirectTo: window.location.origin });
+    // Deliberately show the same "check your email" message whether or not
+    // the address has an account -- confirming/denying an email exists is an
+    // account-enumeration leak.
+    if(result.error){ console.error('resetPasswordForEmail error:', result.error); }
+    showForgotSent();
+  });
+
+  sb.auth.onAuthStateChange(function(event, session){
+    if(event === 'PASSWORD_RECOVERY'){
+      // Supabase's invite-link flow lands here: a session exists but the user
+      // must set a real password before doing anything else.
+      showSetPassword();
+      return;
+    }
+    if(event === 'SIGNED_OUT'){
+      showLogin();
+      return;
+    }
+    if(event === 'INITIAL_SESSION' && session){
+      // Returning visitor with an existing session -- still has to pass the
+      // mandatory-MFA gate, same as a fresh login.
+      checkMfaAndProceed(session);
+      return;
+    }
+    // SIGNED_IN / USER_UPDATED and similar are already handled explicitly by
+    // whichever button triggered them (see login-btn / setpw-btn / mfa
+    // verify handlers above), so they're intentionally ignored here to avoid
+    // double-driving the screen transition.
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Allegation/Audit Request &mdash; My Health Angel</title>
+<link rel="icon" type="image/png" href="data:image/png;base64,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">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#3A3A3A;--navy-2:#6E6E6E;--navy-3:#1C1C1C;
+    --cyan:#E9C46A;--cyan-2:#C9A227;
+    --ink:#2E2E2E;--muted:#5a6b7b;
+    --line:#e3e8ef;--bg-a:#f3f2ee;--bg-b:#ffffff;--card:#ffffff;
+    --red:#e0455a;--red-bg:#fbe5e9;
+    --green:#12a45a;--green-bg:#e2f6ec;
+    --radius:14px;
+    --font-heading:'Montserrat',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    --font-body:'Open Sans',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --shadow-lg:0 30px 80px rgba(6,20,36,.45);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{font-family:var(--font-body);color:var(--ink);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased;
+    min-height:100vh;padding:24px;display:flex;align-items:flex-start;justify-content:center;
+    background:radial-gradient(900px 500px at 82% 18%,rgba(227,181,101,.16),rgba(227,181,101,0) 60%),radial-gradient(700px 500px at 12% 90%,rgba(201,147,46,.14),rgba(201,147,46,0) 60%),linear-gradient(135deg,var(--navy),var(--navy-3) 55%,var(--navy));}
+  h1,h2,.brand{font-family:var(--font-heading);font-weight:700}
+  .hidden{display:none !important}
+  .card{position:relative;z-index:2;background:var(--card);width:100%;max-width:560px;border-radius:18px;padding:32px;box-shadow:var(--shadow-lg);margin:24px 0;border-top:4px solid #9B2924}
+  .logo{display:block;max-width:280px;width:100%;height:auto;margin:0 auto 14px;}
+  .card h1{font-size:19px;font-weight:800;text-align:center;margin-bottom:4px;color:var(--navy)}
+  .tag{text-align:center;color:var(--muted);font-size:12.5px;margin-bottom:24px}
+  .field{margin-bottom:14px}
+  .field label{display:block;font-size:12px;font-weight:700;color:var(--navy);margin-bottom:5px}
+  .field .opt{font-weight:400;color:#93a1b0}
+  .field input,.field select,.field textarea{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:10px;font-size:14px;background:#fbfcfe;transition:.15s;color:var(--ink);font-family:inherit}
+  .field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--cyan-2);box-shadow:0 0 0 3px rgba(201,147,46,.16);background:#fff}
+  textarea{resize:vertical;min-height:110px}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .section-h{font-size:12px;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:.03em;margin:22px 0 10px;padding-top:14px;border-top:1px solid var(--line)}
+  .section-h:first-of-type{margin-top:0;padding-top:0;border-top:none}
+  .req{color:var(--red)}
+  .field-desc{font-size:11.5px;color:var(--muted);margin:-2px 0 6px;line-height:1.4}
+  .charcount{text-align:right;font-size:11px;color:#93a1b0;margin-top:4px}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 16px;border-radius:10px;font-weight:700;font-size:14px;transition:.15s;white-space:nowrap;border:none;cursor:pointer;font-family:inherit;width:100%}
+  .btn-primary{background:linear-gradient(135deg,var(--navy),var(--navy-2));color:#fff;box-shadow:0 6px 16px rgba(58,58,58,.25)}
+  .btn-primary:hover{filter:brightness(1.12)}
+  .btn-primary:disabled{opacity:.6;cursor:default}
+  .err{background:var(--red-bg);color:var(--red);border-radius:9px;padding:9px 11px;font-size:12.5px;margin-bottom:14px}
+  .confirm{text-align:center;padding:20px 0}
+  .confirm .check{width:56px;height:56px;border-radius:50%;background:var(--green-bg);color:var(--green);display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 16px}
+  .confirm h2{font-size:18px;color:var(--navy);margin-bottom:8px}
+  .confirm p{color:var(--muted);font-size:13px;max-width:400px;margin:0 auto}
+  .disclaimer{font-size:11.5px;color:#93a1b0;margin-top:16px;line-height:1.5}
+</style>
+</head>
+<body>
+  <div class="card">
+    <img class="logo" src="mha-logo.png" alt="My Health Angel" onerror="this.style.display='none'" />
+    <h1>Submit A New Allegation/Audit Request</h1>
+    <div class="tag" style="text-align:left;line-height:1.6;">Welcome to the My Health Angel Allegation/Audit Request Form. Once submitted, your request will be automatically recorded and tracked within our compliance management system. Our team is committed to reviewing and resolving all allegation requests in a timely manner. Standard processing time is within 3 business days of receipt. Please note that during our peak season &mdash; June 1st through December 7th &mdash; increased volume may extend processing time to 5-7 business days. We appreciate your patience and understanding during this period. For compliance-related questions or concerns outside of this form, please contact our compliance team directly at <a href="mailto:compliance@myhealthangel.com" style="color:var(--cyan-2);">compliance@myhealthangel.com</a>.</div>
+
+    <div id="err" class="err hidden"></div>
+
+    <form id="alleg-form">
+      <div class="field"><label>Receival Date <span class="req">*</span></label><input id="f-receival-date" type="date" required /></div>
+      <div class="field"><label>Due Date <span class="req">*</span></label><input id="f-due-date" type="date" required /></div>
+      <div class="field">
+        <label>Email Thread Title <span class="opt">(optional)</span></label>
+        <div class="field-desc">If the allegation/audit was also sent via email please provide the email thread title to ensure alignment and tracking of your request</div>
+        <input id="f-email-thread-title" type="text" />
+      </div>
+      <div class="field">
+        <label>Allegation Form Link <span class="opt">(optional)</span></label>
+        <div class="field-desc">If your organization utilizes a form to satisfy your allegation/audit requests please paste the corresponding form link for the requested allegation below.</div>
+        <textarea id="f-allegation-form-link" maxlength="2000"></textarea>
+        <div class="charcount"><span id="f-allegation-form-link-count">0</span>/2000</div>
+      </div>
+      <div class="field"><label>Organization Name <span class="req">*</span></label><input id="f-org-name" type="text" required /></div>
+      <div class="field"><label>Submitter Name <span class="req">*</span></label><input id="f-submitter-name" type="text" required /></div>
+      <div class="field"><label>Submitter Email <span class="req">*</span></label><input id="f-submitter-email" type="email" required /></div>
+      <div class="field"><label>Lead Date <span class="req">*</span></label><input id="f-lead-date" type="date" required /></div>
+      <div class="field">
+        <label>Corresponding Lead Phone Number <span class="req">*</span></label>
+        <div style="display:flex;gap:8px;">
+          <select id="f-lead-phone-cc" style="width:92px;flex:none;">
+            <option value="+1">+1</option>
+            <option value="+52">+52</option>
+            <option value="+44">+44</option>
+            <option value="+91">+91</option>
+            <option value="+63">+63</option>
+            <option value="+61">+61</option>
+          </select>
+          <input id="f-lead-phone-number" type="tel" style="flex:1;" required />
+        </div>
+      </div>
+      <div class="field">
+        <label>Lead Name <span class="req">*</span></label>
+        <div class="field-desc">(If unknown enter NA)</div>
+        <input id="f-lead-name" type="text" required />
+      </div>
+      <div class="field">
+        <label>Call Duration <span class="req">*</span></label>
+        <div class="field-desc">(If unknown enter NA)</div>
+        <input id="f-call-duration" type="text" required />
+      </div>
+
+      <button type="submit" class="btn btn-primary" id="submit-btn">Submit Request</button>
+      <div class="disclaimer">Requests submitted here are reviewed only by My Health Angel's compliance team. Your submission cannot be viewed or edited after you send it.</div>
+    </form>
+
+    <div id="confirm" class="confirm hidden">
+      <div class="check">&#10003;</div>
+      <h2>Request received</h2>
+      <p>Thank you &mdash; your allegation/audit request has been submitted to My Health Angel's compliance team for review. No further action is needed on your part.</p>
+    </div>
+  </div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+(function(){
+  var SUPABASE_URL = 'REPLACE_WITH_YOUR_SUPABASE_PROJECT_URL';
+  var SUPABASE_ANON_KEY = 'REPLACE_WITH_YOUR_SUPABASE_ANON_KEY';
+  var sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  var form = document.getElementById('alleg-form');
+  var errEl = document.getElementById('err');
+  var confirmEl = document.getElementById('confirm');
+  var submitBtn = document.getElementById('submit-btn');
+  var linkInput = document.getElementById('f-allegation-form-link');
+  var linkCount = document.getElementById('f-allegation-form-link-count');
+
+  function showErr(msg){ errEl.textContent = msg; errEl.classList.remove('hidden'); }
+  function clearErr(){ errEl.classList.add('hidden'); errEl.textContent = ''; }
+
+  // Receival Date defaults to today, matching the source form.
+  document.getElementById('f-receival-date').value = new Date().toISOString().slice(0, 10);
+
+  linkInput.addEventListener('input', function(){ linkCount.textContent = linkInput.value.length; });
+
+  form.addEventListener('submit', async function(e){
+    e.preventDefault();
+    clearErr();
+    var receivalDate = document.getElementById('f-receival-date').value;
+    var dueDate = document.getElementById('f-due-date').value;
+    var emailThreadTitle = document.getElementById('f-email-thread-title').value.trim();
+    var allegationFormLink = linkInput.value.trim();
+    var orgName = document.getElementById('f-org-name').value.trim();
+    var submitterName = document.getElementById('f-submitter-name').value.trim();
+    var submitterEmail = document.getElementById('f-submitter-email').value.trim();
+    var leadDate = document.getElementById('f-lead-date').value;
+    var leadPhoneCc = document.getElementById('f-lead-phone-cc').value;
+    var leadPhoneNumber = document.getElementById('f-lead-phone-number').value.trim();
+    var leadName = document.getElementById('f-lead-name').value.trim();
+    var callDuration = document.getElementById('f-call-duration').value.trim();
+
+    if(!receivalDate || !dueDate || !orgName || !submitterName || !submitterEmail || !leadDate || !leadPhoneNumber || !leadName || !callDuration){
+      showErr('Please fill in every required field.');
+      return;
+    }
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Submitting...';
+
+    // Deliberately no .select() here (no RETURNING) -- a submitter has no
+    // SELECT policy on this table (by design, so a submitted request can
+    // never be read back), and requesting the row back after insert would
+    // trigger that same SELECT-policy check and fail.
+    var insertResult = await sb.from('allegations').insert({
+      receival_date: receivalDate, due_date: dueDate, email_thread_title: emailThreadTitle || null,
+      allegation_form_link: allegationFormLink || null, org_name: orgName, submitter_name: submitterName,
+      submitter_email: submitterEmail, lead_date: leadDate,
+      lead_phone_country_code: leadPhoneCc, lead_phone_number: leadPhoneNumber,
+      lead_name: leadName, call_duration: callDuration
+    });
+
+    if(insertResult.error){
+      showErr('Could not submit your request: ' + insertResult.error.message);
+      submitBtn.disabled = false; submitBtn.textContent = 'Submit Request';
+      return;
+    }
+
+    form.classList.add('hidden');
+    confirmEl.classList.remove('hidden');
+  });
+})();
+</script>
+</body>
+</html>
