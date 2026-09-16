@@ -5,6 +5,9 @@ This is a standalone, white-labeled fork of the CRM Admin Portal + Partner Porta
 ## What's in this package
 
 ```
+root/
+  index.html        — the ONE sign-in page for admins and partners, hosted at the site root (see step 7)
+  mha-logo.png, favicon.png
 admin/
   index.html        — the CRM Admin Portal (single-page app, no build step)
   daybook.html      — the Day Book: the planner + team task list that IS the admin portal's Tasks tab
@@ -99,23 +102,40 @@ var APEX_STORAGE_KEY='REPLACE_WITH_YOUR_OWN_WORKER_SHARED_KEY';
 var SUPABASE_URL = 'REPLACE_WITH_YOUR_SUPABASE_PROJECT_URL';
 var SUPABASE_ANON_KEY = 'REPLACE_WITH_YOUR_SUPABASE_ANON_KEY';
 ```
-with your deployed Worker URL, your `STORAGE_SHARED_KEY`, and the Supabase URL + anon key (the admin login uses Supabase Auth with mandatory authenticator-app 2FA). Also set `ALLEGATION_FORM_URL` (search for `REPLACE_WITH_YOUR_PARTNER_PORTAL_DOMAIN`) to where you host the public allegation form. The header already shows `compliance.myhealthangel.com` (`domain:` in the `BRAND` block) — change it if the admin portal ends up somewhere else.
+with your deployed Worker URL, your `STORAGE_SHARED_KEY`, and the Supabase URL + anon key (the admin login uses Supabase Auth with mandatory authenticator-app 2FA). `ALLEGATION_FORM_URL` and the header's `domain:` are already set for the layout below — change them only if the addresses change.
 
-Host `index.html`, `daybook.html`, `mha-logo.png` and `favicon.png` together in the same folder of any static host (Cloudflare Pages, Netlify, S3+CloudFront). The intended address for the admin portal is **https://compliance.myhealthangel.com/**. `daybook.html` needs no configuration of its own — the admin page hands it the Worker URL and key at runtime. Opened directly it shows only the personal planner.
+`daybook.html` needs no configuration of its own — the admin page hands it the Worker URL and key at runtime. Opened directly it shows only the personal planner.
 
-### 6. Configure and host `partner-client/index.html` and `allegations.html`
+### 6. Configure `partner-client/index.html`, `allegations.html` and `root/index.html`
 
-In **both** files, replace:
+In **all three** files, replace:
 ```js
 var SUPABASE_URL = 'REPLACE_WITH_YOUR_SUPABASE_PROJECT_URL';
 var SUPABASE_ANON_KEY = 'REPLACE_WITH_YOUR_SUPABASE_ANON_KEY';
 ```
-with your project's URL and anon/public key (safe for client-side use — it's RLS-protected). Both pages already show `compliance@myhealthangel.com` as the contact address. Host both files plus `mha-logo.png` as static assets. They don't need to share a domain with the admin portal (a subdomain such as `partners.myhealthangel.com` works well); whatever you choose, put it in `ALLEGATION_FORM_URL` in `admin/index.html` so the admin portal's "allegation form" link points at it.
+with your project's URL and anon/public key (safe for client-side use — it's RLS-protected). The partner pages already show `compliance@myhealthangel.com` as the contact address.
+
+### 7. Host everything under one domain: `https://compliance.myhealthangel.com/`
+
+MHA wants a single sign-in page for admins and partners alike. Everything is one static site (Cloudflare Pages, Netlify, S3+CloudFront — any host that serves files), laid out like this:
+
+| Address | Files | Who |
+|---|---|---|
+| `https://compliance.myhealthangel.com/` | contents of `root/` | **The sign-in page for everyone.** It signs in with Supabase Auth, checks whether the account is on the admin allowlist (`is_allowed_admin_email`) or has a partner `users` row, and sends the browser to the right app below. |
+| `https://compliance.myhealthangel.com/admin/` | contents of `admin/` | Admin portal (then its own authenticator-app step) |
+| `https://compliance.myhealthangel.com/partners/` | contents of `partner-client/` | Partner portal |
+| `https://compliance.myhealthangel.com/partners/allegations` | `partner-client/allegations.html` | Public allegation/audit request form, no login (this is what `ALLEGATION_FORM_URL` in `admin/index.html` points at; on a host without clean URLs use `/partners/allegations.html` and update that line) |
+
+Because all three pages share one origin, the session saved by the sign-in page is picked up automatically by whichever app it redirects to. Each app still has its own sign-in screen as a fallback if someone opens `/admin/` or `/partners/` directly without a session, and password-reset links land on the right app automatically.
+
+In the Supabase project, add `https://compliance.myhealthangel.com/admin/` and `https://compliance.myhealthangel.com/partners/` to **Authentication → URL Configuration → Redirect URLs**, and set the Site URL to `https://compliance.myhealthangel.com/`, or reset/invite links will be refused.
 
 ## Quick placeholder checklist
 
 - [ ] `admin/index.html`: `AI_ENDPOINT`, `APEX_STORAGE_KEY`, `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `ALLEGATION_FORM_URL`
 - [ ] `admin/worker.js` settings: `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `STORAGE_SHARED_KEY`, `ANTHROPIC_API_KEY`, `ALLEGATION_WEBHOOK_SECRET`, `TASK_WEBHOOK_SECRET`, `RESEND_API_KEY`, `ALLEGATION_NOTIFY_EMAIL`, `ALLEGATION_NOTIFY_FROM`, `TASK_NOTIFY_FROM`, `MONDAY_API_TOKEN` (optional); bindings `COMPLIANCE_KV`, `AI`, `VIDEO_R2`
 - [ ] `supabase/migrations/20260827020000_allegation_notify_webhook.sql` + `20260901030000_tasks_and_more_admins.sql`: Worker URL + webhook secrets
-- [ ] `partner-client/index.html`: `SUPABASE_URL`, `SUPABASE_ANON_KEY`, compliance email
-- [ ] `partner-client/allegations.html`: `SUPABASE_URL`, `SUPABASE_ANON_KEY`, compliance email
+- [ ] `partner-client/index.html`: `SUPABASE_URL`, `SUPABASE_ANON_KEY`
+- [ ] `partner-client/allegations.html`: `SUPABASE_URL`, `SUPABASE_ANON_KEY`
+- [ ] `root/index.html`: `SUPABASE_URL`, `SUPABASE_ANON_KEY`
+- [ ] Supabase → Authentication → URL Configuration: Site URL + the two redirect URLs (step 7)

@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>My Health Angel — Sign in</title>
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Open+Sans:wght@400;600;700&display=swap">
+<!--
+  ONE SIGN-IN PAGE FOR EVERYONE — https://compliance.myhealthangel.com/
+  --------------------------------------------------------------------
+  Admins and partner organizations both sign in here with the same Supabase
+  Auth project. After a successful sign-in the page works out which side the
+  account belongs to and sends the browser there:
+
+     admin   -> /admin/      (email is on the admin_users allowlist)
+     partner -> /partners/   (a row in `users` belongs to this account)
+
+  Both apps live on this same origin, so the Supabase session saved by this
+  page is picked up automatically by whichever app it redirects to (supabase-js
+  keeps the session in localStorage under one key per project). The admin app
+  then runs its own mandatory authenticator-app step before showing anything.
+
+  Deploy layout (all one static site):
+     /                  <- this file (+ favicon.png, mha-logo.png)
+     /admin/            <- the admin/ folder of the package
+     /partners/         <- the partner-client/ folder of the package
+
+  Fill in the two REPLACE_WITH_ values below with the same Supabase URL and
+  anon key used in admin/index.html and partner-client/index.html.
+-->
+<style>
+  :root{ --bg:#141414; --card:#1A1A1C; --card-2:#232326; --ink:#ECEAE4; --ink-2:#B3B0A8; --ink-3:#7E7C76; --line:#3A3A40; --gold:#E2B94C; --gold-2:#C9A227; --red:#f4a3a3; --red-bg:#3b1c1e; }
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0}
+  body{font-family:'Open Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:var(--ink);
+    background:radial-gradient(900px 500px at 82% 18%,rgba(201,162,39,.14),rgba(201,162,39,0) 60%),radial-gradient(700px 500px at 12% 90%,rgba(40,40,40,.18),rgba(40,40,40,0) 60%),linear-gradient(135deg,#2A2A2A,#141414 55%,#2A2A2A);
+    display:flex;align-items:center;justify-content:center;padding:24px}
+  .card{position:relative;background:var(--card);width:100%;max-width:410px;border-radius:18px;padding:30px;box-shadow:0 30px 80px rgba(6,20,36,.45);border-top:4px solid var(--gold)}
+  .logo{display:block;max-width:220px;width:100%;height:auto;margin:0 auto 16px}
+  h1{font-family:'Montserrat',sans-serif;font-size:19px;font-weight:800;text-align:center;margin:0 0 4px}
+  .tag{text-align:center;color:var(--ink-2);font-size:12.5px;margin:0 0 20px}
+  .field{margin-bottom:13px}
+  .field label{display:block;font-size:12px;font-weight:700;margin-bottom:5px}
+  .field input{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:10px;font-size:14px;background:var(--card-2);color:var(--ink);font-family:inherit}
+  .field input:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(201,162,39,.18)}
+  .btn{display:flex;width:100%;align-items:center;justify-content:center;gap:8px;padding:11px 16px;border-radius:10px;font-weight:700;font-size:14px;border:none;cursor:pointer;font-family:inherit;
+    background:linear-gradient(135deg,#2A2A2A,#141414);color:#fff;box-shadow:0 6px 16px rgba(20,20,20,.35);margin-bottom:10px;border:1px solid var(--line)}
+  .btn.gold{background:linear-gradient(135deg,var(--gold),var(--gold-2));color:#1A1408;border-color:transparent}
+  .btn:hover{filter:brightness(1.1)}
+  .btn:disabled{opacity:.6;cursor:default}
+  .links{text-align:center;font-size:12.5px;color:var(--ink-2)}
+  .links button{background:none;border:none;color:var(--gold);font-weight:700;cursor:pointer;font-size:12.5px;font-family:inherit}
+  .err{background:var(--red-bg);color:var(--red);border-radius:9px;padding:9px 11px;font-size:12.5px;margin-bottom:14px}
+  .ok{background:#163122;color:#82d3a6;border-radius:9px;padding:9px 11px;font-size:12.5px;margin-bottom:14px}
+  .hidden{display:none !important}
+  .foot{margin-top:18px;text-align:center;font-size:11px;color:var(--ink-3);line-height:1.6}
+</style>
+</head>
+<body>
+<div class="card">
+  <img class="logo" src="mha-logo.png" alt="My Health Angel">
+  <h1 id="title">My Health Angel</h1>
+  <p class="tag" id="tag">Sign in to the Partner &amp; Compliance CRM</p>
+  <div id="err" class="err hidden"></div>
+  <div id="ok" class="ok hidden"></div>
+
+  <form id="login" autocomplete="on">
+    <div class="field"><label for="email">Email</label><input id="email" type="email" autocomplete="username" required></div>
+    <div class="field"><label for="password">Password</label><input id="password" type="password" autocomplete="current-password" required></div>
+    <button class="btn gold" id="signin" type="submit">Sign in</button>
+    <div class="links"><button type="button" id="to-forgot">Forgot password?</button></div>
+  </form>
+
+  <form id="forgot" class="hidden">
+    <div class="field"><label for="femail">Email</label><input id="femail" type="email" autocomplete="username" required></div>
+    <button class="btn gold" id="send-reset" type="submit">Send reset link</button>
+    <div class="links"><button type="button" id="to-login">Back to sign in</button></div>
+  </form>
+
+  <div class="foot">Admins and partner organizations sign in here.<br>Questions: <a href="mailto:compliance@myhealthangel.com" style="color:var(--gold)">compliance@myhealthangel.com</a></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+(function(){
+  var SUPABASE_URL = 'REPLACE_WITH_YOUR_SUPABASE_PROJECT_URL';
+  var SUPABASE_ANON_KEY = 'REPLACE_WITH_YOUR_SUPABASE_ANON_KEY';
+  var ADMIN_APP = '/admin/';
+  var PARTNER_APP = '/partners/';
+
+  var $ = function(id){ return document.getElementById(id); };
+  var err = $('err'), ok = $('ok');
+  function showErr(m){ ok.classList.add('hidden'); err.textContent = m; err.classList.remove('hidden'); }
+  function showOk(m){ err.classList.add('hidden'); ok.textContent = m; ok.classList.remove('hidden'); }
+  function clearMsgs(){ err.classList.add('hidden'); ok.classList.add('hidden'); }
+
+  var sb = null;
+  try{ sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY); }catch(e){}
+  if(!sb){
+    showErr('This sign-in page is not configured yet: set SUPABASE_URL and SUPABASE_ANON_KEY near the bottom of this file to your Supabase project\'s values, then reload.');
+    $('signin').disabled = true;
+  }
+
+  // Which side does this signed-in account belong to?
+  //   admin   = email on the admin_users allowlist (checked through the same
+  //             RPC the admin app uses at sign-up)
+  //   partner = has a row in `users` (RLS lets an account read only its own row)
+  async function routeFor(user){
+    var email = (user.email || '').toLowerCase();
+    var adm = await sb.rpc('is_allowed_admin_email', { check_email: email });
+    if(!adm.error && adm.data === true) return ADMIN_APP;
+    var row = await sb.from('users').select('org_id').eq('id', user.id).maybeSingle();
+    if(!row.error && row.data) return PARTNER_APP;
+    return null;
+  }
+
+  async function goToApp(user){
+    var dest = await routeFor(user);
+    if(!dest){
+      await sb.auth.signOut();
+      showErr('This account is not set up for the portal. Admins must be on the admin list and partners must have an invited organization login. Contact compliance@myhealthangel.com.');
+      $('signin').disabled = false; $('signin').textContent = 'Sign in';
+      return;
+    }
+    window.location.replace(dest);
+  }
+
+  // Already signed in (came back to the root, or session restored)? Route straight through.
+  if(sb){
+    sb.auth.getSession().then(function(r){
+      var s = r && r.data && r.data.session;
+      if(s && s.user){ showOk('Signing you in…'); goToApp(s.user); }
+    }).catch(function(){});
+  }
+
+  $('login').addEventListener('submit', async function(e){
+    e.preventDefault(); if(!sb) return; clearMsgs();
+    var btn = $('signin'); btn.disabled = true; btn.textContent = 'Signing in…';
+    var r = await sb.auth.signInWithPassword({ email: $('email').value.trim(), password: $('password').value });
+    if(r.error){ showErr(r.error.message); btn.disabled = false; btn.textContent = 'Sign in'; return; }
+    await goToApp(r.data.user);
+  });
+
+  $('to-forgot').addEventListener('click', function(){ clearMsgs(); $('login').classList.add('hidden'); $('forgot').classList.remove('hidden'); $('femail').value = $('email').value; $('tag').textContent = 'We will email you a link to set a new password'; });
+  $('to-login').addEventListener('click', function(){ clearMsgs(); $('forgot').classList.add('hidden'); $('login').classList.remove('hidden'); $('tag').textContent = 'Sign in to the Partner & Compliance CRM'; });
+
+  // The reset link must land on the app that knows how to finish it (both
+  // apps handle Supabase's PASSWORD_RECOVERY event), so pick by role first.
+  $('forgot').addEventListener('submit', async function(e){
+    e.preventDefault(); if(!sb) return; clearMsgs();
+    var email = $('femail').value.trim().toLowerCase();
+    var btn = $('send-reset'); btn.disabled = true; btn.textContent = 'Sending…';
+    var adm = await sb.rpc('is_allowed_admin_email', { check_email: email });
+    var dest = (!adm.error && adm.data === true) ? ADMIN_APP : PARTNER_APP;
+    var r = await sb.auth.resetPasswordForEmail(email, { redirectTo: window.location.origin + dest });
+    btn.disabled = false; btn.textContent = 'Send reset link';
+    if(r.error){ showErr(r.error.message); return; }
+    showOk('If that address has an account, a reset link is on its way. Check your inbox.');
+  });
+})();
+</script>
+</body>
+</html>
