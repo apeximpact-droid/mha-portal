@@ -42,6 +42,17 @@ One pre-existing quirk carried over as-is: there's a "Compliance Workflow" board
 
 The MyHealthAngel logo (gold wings, gray wordmark) is included as `mha-logo.png` in both folders and referenced by file name from all four pages, with a wings-only `favicon.png` beside it. Keep the PNGs next to the HTML files when hosting. If you'd rather have the pages self-contained, replace `logoDataUri: 'mha-logo.png'` in `admin/index.html`, the `src="mha-logo.png"` in `admin/daybook.html`, and the two `src="mha-logo.png"` in each partner page with a `data:image/png;base64,…` string.
 
+## Before you decide on a backend: what Supabase does here
+
+The package assumes a Supabase project. It is not a thin dependency — four things sit directly on it, so read this before substituting anything:
+
+- **Database + security.** The 60 migrations are plain Postgres, and the partner portal's isolation relies on Postgres row-level security: a partner account can only read rows for its own organization because the database enforces it, not the page. The partner pages query the database directly from the browser with the anon key.
+- **Auth.** Admin and partner sign-in, invites, password resets and the admin authenticator-app (TOTP) step all use Supabase Auth.
+- **Storage.** Material files, allegation audio/documents, logos and task attachments live in Supabase Storage buckets, created by the migrations.
+- **Email triggers.** New allegations and tasks email people because a Postgres trigger (`pg_net`) calls the Worker.
+
+If you would rather not use hosted Supabase: **self-hosting Supabase** (it is open source) runs this package unchanged. **Plain Postgres with your own auth/storage/API** keeps the migrations but means rewriting the Worker's data access, both front ends' direct database calls, auth, file handling and the email triggers — weeks of work, and the RLS guarantees move into your API code. **A different platform** (Firebase, a custom stack) is a rebuild that uses this package as the specification. Please raise it with MHA before choosing the second or third path.
+
 ## Setup steps
 
 ### 1. Create a new Supabase project
